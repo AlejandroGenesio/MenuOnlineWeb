@@ -1,9 +1,14 @@
+using MenuOnlineUdemy;
 using MenuOnlineUdemy.Entities;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Services START
 
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=DefaultConnection"));
+
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Services END
@@ -15,22 +20,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/products", () =>
-{
-    var products = new List<Product> {
-        new Product
-        {
-            Id = 1,
-            Name = "test1"
-        },
-
-        new Product {
-            Id = 2,
-            Name = "test2"
-        }};
-
-    return products;
-});
 app.MapGet("/", () => "Hello World!");
 
 // Middleware END
