@@ -48,6 +48,18 @@ app.MapPost("/products", async (Product product, IRepositoryProducts repository)
     return Results.Created($"/products/{id}", product);
 });
 
+app.MapPut("/products/{id:int}", async (int id, Product product, IRepositoryProducts repository) =>
+{
+    var exists = await repository.IfExists(id);
+    if (!exists)
+    {
+        return Results.NotFound();
+    }
+
+    await repository.Update(product);
+    return Results.NoContent();
+});
+
 // Middleware END
 
 app.Run();
