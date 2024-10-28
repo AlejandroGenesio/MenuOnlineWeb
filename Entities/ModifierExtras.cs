@@ -1,12 +1,12 @@
 ﻿namespace MenuOnlineUdemy.Entities
 {
-    public class Product
+    public class ModifierExtras
     {
         public int Id { get; set; }
+
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public decimal? Price { get; set; }
-        public decimal? sell_min_price { get; set; }
-
+        public decimal Price { get; set; } = 0;
+        
     }
 }
