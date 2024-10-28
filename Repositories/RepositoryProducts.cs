@@ -18,6 +18,11 @@ namespace MenuOnlineUdemy.Repositories
             return product.Id;
         }
 
+        public async Task Delete(int id)
+        {
+            await context.Products.Where(x => x.Id == id).ExecuteDeleteAsync();
+        }
+
         public async Task<List<Product>> GetAll()
         {
             return await context.Products.OrderBy(x => x.Name).ToListAsync();

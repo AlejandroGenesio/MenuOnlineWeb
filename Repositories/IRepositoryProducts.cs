@@ -12,5 +12,7 @@ namespace MenuOnlineUdemy.Repositories
         Task<bool> IfExists(int id);
 
         Task Update(Product product);
+
+        Task Delete(int id);
     }
 }

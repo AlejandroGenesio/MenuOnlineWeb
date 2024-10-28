@@ -60,6 +60,18 @@ app.MapPut("/products/{id:int}", async (int id, Product product, IRepositoryProd
     return Results.NoContent();
 });
 
+app.MapDelete("/products/{id:int}", async (int id, IRepositoryProducts repository) =>
+{
+    var exists = await repository.IfExists(id);
+    if (!exists)
+    {
+        return Results.NotFound();
+    }
+
+    await repository.Delete(id);
+    return Results.NoContent();
+});
+
 // Middleware END
 
 app.Run();
