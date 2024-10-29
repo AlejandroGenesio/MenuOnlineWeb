@@ -1,7 +1,8 @@
-﻿using MenuOnlineUdemy.Entities;
+﻿using AutoMapper;
+using MenuOnlineUdemy.DTOs;
+using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
-using System.Runtime.CompilerServices;
 
 namespace MenuOnlineUdemy.Endpoints
 {
@@ -23,14 +24,16 @@ namespace MenuOnlineUdemy.Endpoints
             return group;
         }
 
-        static async Task<Ok<List<Product>>> GetProducts(IRepositoryProducts repository)
+        static async Task<Ok<List<ProductDTO>>> GetProducts(IRepositoryProducts repository, IMapper mapper)
         {
 
             var products = await repository.GetAll();
-            return TypedResults.Ok(products);
+            var productsDTO = mapper.Map<List<ProductDTO>>(products); //products.Select(x => new  ProductDTO { Id = x.Id, Name = x.Name}).ToList();
+            return TypedResults.Ok(productsDTO);
         }
 
-        static async Task<Results<Ok<Product>, NotFound>> GetProductsById(IRepositoryProducts repository, int id)
+        static async Task<Results<Ok<ProductDTO>, NotFound>> GetProductsById(IRepositoryProducts repository, int id
+            , IMapper mapper)
         {
             var product = await repository.GetById(id);
 
@@ -39,22 +42,34 @@ namespace MenuOnlineUdemy.Endpoints
                 return TypedResults.NotFound();
             }
 
-            return TypedResults.Ok(product);
+            var productDTO = mapper.Map<ProductDTO>(product);
+
+            return TypedResults.Ok(productDTO);
         }
 
-        static async Task<Created<Product>> CreateProduct(Product product, IRepositoryProducts repository)
+        static async Task<Created<ProductDTO>> CreateProduct(CreateProductDTO createProductDTO, IRepositoryProducts repository
+            , IMapper mapper)
         {
+            var product = mapper.Map<Product> (createProductDTO);
+
             var id = await repository.Create(product);
-            return TypedResults.Created($"/products/{id}", product);
+
+            var productDTO = mapper.Map<ProductDTO>(product);
+
+            return TypedResults.Created($"/products/{id}", productDTO);
         }
 
-        static async Task<Results<NoContent, NotFound>> UpdateProduct(int id, Product product, IRepositoryProducts repository)
+        static async Task<Results<NoContent, NotFound>> UpdateProduct(int id, CreateProductDTO createProductDTO, IRepositoryProducts repository
+            , IMapper mapper)
         {
             var exists = await repository.IfExists(id);
             if (!exists)
             {
                 return TypedResults.NotFound();
             }
+
+            var product = mapper.Map<Product>(createProductDTO);
+            product.Id = id;
 
             await repository.Update(product);
             return TypedResults.NoContent();

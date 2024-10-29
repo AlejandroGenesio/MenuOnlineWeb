@@ -17,6 +17,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRepositoryProducts, RepositoryProducts>();
 builder.Services.AddScoped<IRepositoryImages, RepositoryImages>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 // Services END
 
 var app = builder.Build();
