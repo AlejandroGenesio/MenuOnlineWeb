@@ -24,13 +24,17 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/products", async (IRepositoryProducts repository) =>
+app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
+
+var enpointsProducts = app.MapGroup("/products");
+
+enpointsProducts.MapGet("/", async (IRepositoryProducts repository) =>
 {
 
     return await repository.GetAll();
 });
 
-app.MapGet("/products/{id:int}", async (IRepositoryProducts repository, int id) =>
+enpointsProducts.MapGet("/{id:int}", async (IRepositoryProducts repository, int id) =>
 {
     var product = await repository.GetById(id);
 
@@ -42,13 +46,13 @@ app.MapGet("/products/{id:int}", async (IRepositoryProducts repository, int id) 
     return Results.Ok(product);
 });
 
-app.MapPost("/products", async (Product product, IRepositoryProducts repository) =>
+enpointsProducts.MapPost("/", async (Product product, IRepositoryProducts repository) =>
 {
     var id = await repository.Create(product);
     return Results.Created($"/products/{id}", product);
 });
 
-app.MapPut("/products/{id:int}", async (int id, Product product, IRepositoryProducts repository) =>
+enpointsProducts.MapPut("/{id:int}", async (int id, Product product, IRepositoryProducts repository) =>
 {
     var exists = await repository.IfExists(id);
     if (!exists)
@@ -60,7 +64,7 @@ app.MapPut("/products/{id:int}", async (int id, Product product, IRepositoryProd
     return Results.NoContent();
 });
 
-app.MapDelete("/products/{id:int}", async (int id, IRepositoryProducts repository) =>
+enpointsProducts.MapDelete("/{id:int}", async (int id, IRepositoryProducts repository) =>
 {
     var exists = await repository.IfExists(id);
     if (!exists)
