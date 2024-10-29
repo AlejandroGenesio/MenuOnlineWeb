@@ -1,6 +1,7 @@
 using MenuOnlineUdemy;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,54 +29,65 @@ app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
 
 var enpointsProducts = app.MapGroup("/products");
 
-enpointsProducts.MapGet("/", async (IRepositoryProducts repository) =>
+enpointsProducts.MapGet("/", GetProducts);
+
+enpointsProducts.MapGet("/{id:int}", GetProductsById);
+
+enpointsProducts.MapPost("/", CreateProduct);
+
+enpointsProducts.MapPut("/{id:int}", UpdateProduct);
+
+enpointsProducts.MapDelete("/{id:int}", DeleteProduct);
+
+// Middleware END
+
+app.Run();
+
+static async Task<Ok<List<Product>>> GetProducts (IRepositoryProducts repository)
 {
 
-    return await repository.GetAll();
-});
+    var products = await repository.GetAll();
+    return TypedResults.Ok(products);
+}
 
-enpointsProducts.MapGet("/{id:int}", async (IRepositoryProducts repository, int id) =>
+static async Task<Results<Ok<Product>, NotFound>> GetProductsById(IRepositoryProducts repository, int id)
 {
     var product = await repository.GetById(id);
 
     if (product == null)
     {
-        return Results.NotFound();
+        return TypedResults.NotFound();
     }
 
-    return Results.Ok(product);
-});
+    return TypedResults.Ok(product);
+}
 
-enpointsProducts.MapPost("/", async (Product product, IRepositoryProducts repository) =>
+static async Task<Created<Product>> CreateProduct(Product product, IRepositoryProducts repository)
 {
     var id = await repository.Create(product);
-    return Results.Created($"/products/{id}", product);
-});
+    return TypedResults.Created($"/products/{id}", product);
+}
 
-enpointsProducts.MapPut("/{id:int}", async (int id, Product product, IRepositoryProducts repository) =>
+static async Task<Results<NoContent, NotFound>> UpdateProduct(int id, Product product, IRepositoryProducts repository)
 {
     var exists = await repository.IfExists(id);
     if (!exists)
     {
-        return Results.NotFound();
+        return TypedResults.NotFound();
     }
 
     await repository.Update(product);
-    return Results.NoContent();
-});
+    return TypedResults.NoContent();
+}
 
-enpointsProducts.MapDelete("/{id:int}", async (int id, IRepositoryProducts repository) =>
+static async Task<Results<NotFound, NoContent>> DeleteProduct(int id, IRepositoryProducts repository)
 {
     var exists = await repository.IfExists(id);
     if (!exists)
     {
-        return Results.NotFound();
+        return TypedResults.NotFound();
     }
 
     await repository.Delete(id);
-    return Results.NoContent();
-});
-
-// Middleware END
-
-app.Run();
+    return TypedResults.NoContent();
+}
