@@ -1,5 +1,6 @@
 ﻿using MenuOnlineUdemy.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace MenuOnlineUdemy
 {
@@ -7,6 +8,14 @@ namespace MenuOnlineUdemy
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+
+            modelBuilder.Entity<Image>().Property(p => p.File).IsUnicode();
         }
 
         public DbSet<Product> Products { get; set; }

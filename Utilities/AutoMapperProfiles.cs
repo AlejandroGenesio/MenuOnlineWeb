@@ -10,6 +10,10 @@ namespace MenuOnlineUdemy.Utilities
         {
             CreateMap<CreateProductDTO, Product>();
             CreateMap<Product, ProductDTO>();
+
+            CreateMap<CreateImageDTO, Image>()
+                .ForMember(x => x.File, options => options.Ignore());
+            CreateMap<Image, ImageDTO>();
         }
     }
 }

@@ -31,6 +31,7 @@ app.UseSwaggerUI();
 app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
 
 app.MapGroup("/products").MapProducts();
+app.MapGroup("/images").MapImages();
 
 // Middleware END
 

@@ -20,22 +20,22 @@ namespace MenuOnlineUdemy.Repositories
 
         public async Task Delete(int id)
         {
-            await context.Products.Where(x => x.Id == id).ExecuteDeleteAsync();
+            await context.Products.AsNoTracking().Where(x => x.Id == id).ExecuteDeleteAsync();
         }
 
         public async Task<List<Product>> GetAll()
         {
-            return await context.Products.OrderBy(x => x.Name).ToListAsync();
+            return await context.Products.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
         }
 
         public async Task<Product?> GetById(int id)
         {
-            return await context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            return await context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<bool> IfExists(int id)
         {
-            return await context.Products.AnyAsync(x => x.Id == id);
+            return await context.Products.AsNoTracking().AnyAsync(x => x.Id == id);
         }
 
         public async Task Update(Product product)
