@@ -21,13 +21,24 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapDelete("/{id:int}", DeleteProduct);
 
+            group.MapGet("/getbyname/{name}", GetProductsByName);
+
             return group;
         }
 
-        static async Task<Ok<List<ProductDTO>>> GetProducts(IRepositoryProducts repository, IMapper mapper)
+        static async Task<Ok<List<ProductDTO>>> GetProducts(IRepositoryProducts repository, IMapper mapper,
+            int page = 1, int recordsByPage = 10)
+        {
+            var pagination = new PaginationDTO { Page = page, RecordsByPage = recordsByPage };
+            var products = await repository.GetAll(pagination);
+            var productsDTO = mapper.Map<List<ProductDTO>>(products); //products.Select(x => new  ProductDTO { Id = x.Id, Name = x.Name}).ToList();
+            return TypedResults.Ok(productsDTO);
+        }
+
+        static async Task<Ok<List<ProductDTO>>> GetProductsByName(string name, IRepositoryProducts repository, IMapper mapper)
         {
 
-            var products = await repository.GetAll();
+            var products = await repository.GetByName(name);
             var productsDTO = mapper.Map<List<ProductDTO>>(products); //products.Select(x => new  ProductDTO { Id = x.Id, Name = x.Name}).ToList();
             return TypedResults.Ok(productsDTO);
         }
@@ -86,5 +97,6 @@ namespace MenuOnlineUdemy.Endpoints
             await repository.Delete(id);
             return TypedResults.NoContent();
         }
+
     }
 }

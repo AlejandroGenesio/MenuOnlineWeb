@@ -1,4 +1,5 @@
-﻿using MenuOnlineUdemy.Entities;
+﻿using MenuOnlineUdemy.DTOs;
+using MenuOnlineUdemy.Entities;
 
 namespace MenuOnlineUdemy.Repositories
 {
@@ -6,7 +7,7 @@ namespace MenuOnlineUdemy.Repositories
     {
         Task<int> Create(Product product);
 
-        Task<List<Product>> GetAll();
+        Task<List<Product>> GetAll(PaginationDTO paginationDTO);
         Task<Product?> GetById(int id);
 
         Task<bool> IfExists(int id);
@@ -14,5 +15,6 @@ namespace MenuOnlineUdemy.Repositories
         Task Update(Product product);
 
         Task Delete(int id);
+        Task<List<Product>> GetByName(string name);
     }
 }

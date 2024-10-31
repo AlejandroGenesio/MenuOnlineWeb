@@ -9,5 +9,6 @@ namespace MenuOnlineUdemy.Repositories
         Task<int> Create(Image image);
         Task<bool> IfExists(int id);
         Task<List<Image>> GetAll();
+        Task<Image> GetById(int id);
     }
 }
