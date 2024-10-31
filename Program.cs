@@ -2,6 +2,7 @@ using MenuOnlineUdemy;
 using MenuOnlineUdemy.Endpoints;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
+using MenuOnlineUdemy.services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRepositoryProducts, RepositoryProducts>();
 builder.Services.AddScoped<IRepositoryImages, RepositoryImages>();
+builder.Services.AddScoped<IFileStorage, LocalStorage>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -27,6 +30,8 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseStaticFiles();
 
 app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
 
