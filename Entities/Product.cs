@@ -13,4 +13,4 @@ namespace MenuOnlineUdemy.Entities
         public decimal? sell_min_price { get; set; }
 
     }
-}
+} 
