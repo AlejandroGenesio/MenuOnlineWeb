@@ -11,6 +11,15 @@ namespace MenuOnlineUdemy.Utilities
             CreateMap<CreateProductDTO, Product>();
             CreateMap<Product, ProductDTO>();
 
+            CreateMap<CreateVariantDTO, Variant>();
+            CreateMap<Variant, VariantDTO>();
+
+            CreateMap<CreateModifierGroupDTO, ModifierGroup>();
+            CreateMap<ModifierGroup, ModifierGroupDTO>();
+
+            CreateMap<CreateModifierExtraDTO, ModifierExtra>();
+            CreateMap<ModifierExtra, ModifierExtraDTO>();
+
             CreateMap<CreateImageDTO, Image>()
                 .ForMember(x => x.File, options => options.Ignore());
             CreateMap<Image, ImageDTO>();

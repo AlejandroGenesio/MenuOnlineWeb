@@ -16,6 +16,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRepositoryProducts, RepositoryProducts>();
+builder.Services.AddScoped<IRepositoryVariants, RepositoryVariants>();
+builder.Services.AddScoped<IRepositoryModifierExtras, RepositoryModifierExtras>();
+builder.Services.AddScoped<IRepositoryModifierGroups, RepositoryModifierGroups>();
 builder.Services.AddScoped<IRepositoryImages, RepositoryImages>();
 builder.Services.AddScoped<IFileStorage, LocalStorage>();
 builder.Services.AddHttpContextAccessor();
@@ -36,6 +39,9 @@ app.UseStaticFiles();
 app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
 
 app.MapGroup("/products").MapProducts();
+app.MapGroup("/variants").MapVariants();
+app.MapGroup("/modifierextras").MapModifierExtras();
+app.MapGroup("/modifiergroups").MapModifierGroups();
 app.MapGroup("/images").MapImages();
 
 // Middleware END

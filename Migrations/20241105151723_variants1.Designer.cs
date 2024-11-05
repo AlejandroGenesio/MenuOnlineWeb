@@ -4,6 +4,7 @@ using MenuOnlineUdemy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MenuOnlineUdemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241105151723_variants1")]
+    partial class variants1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +47,7 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierExtra", b =>
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierExtras", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +68,7 @@ namespace MenuOnlineUdemy.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ModifierExtras");
+                    b.ToTable("ModifiersExtras");
                 });
 
             modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierGroup", b =>
