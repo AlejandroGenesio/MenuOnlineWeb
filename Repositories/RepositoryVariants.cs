@@ -27,12 +27,11 @@ namespace MenuOnlineUdemy.Repositories
             await context.Variants.AsNoTracking().Where(x => x.Id == id).ExecuteDeleteAsync();
         }
 
-        public async Task<List<Variant>> GetAll(PaginationDTO paginationDTO)
+        public async Task<List<Variant>> GetAll(int productId, PaginationDTO paginationDTO)
         {
             var queryable = context.Variants.AsQueryable();
             await httpContext.InsertParametersPaginationHeader(queryable);
-            return await queryable.AsNoTracking().OrderBy(x => x.Name).Pagination(paginationDTO).ToListAsync();
-            //return await context.Variants.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+            return await queryable.AsNoTracking().Where(c => c.ProductId == productId).OrderBy(x => x.Name).Pagination(paginationDTO).ToListAsync();
         }
 
         public async Task<Variant?> GetById(int id)

@@ -11,6 +11,7 @@ namespace MenuOnlineUdemy.Entities
         public string? Description { get; set; }
         public decimal? Price { get; set; }
         public decimal? sell_min_price { get; set; }
+        public List<Variant> Variants { get; set; } = new List<Variant>();
 
     }
 } 

@@ -7,7 +7,7 @@ namespace MenuOnlineUdemy.Repositories
     {
         Task<int> Create(Variant variant);
 
-        Task<List<Variant>> GetAll(PaginationDTO paginationDTO);
+        Task<List<Variant>> GetAll(int productId, PaginationDTO paginationDTO);
         Task<Variant?> GetById(int id);
 
         Task<bool> IfExists(int id);

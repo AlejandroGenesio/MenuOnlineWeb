@@ -26,11 +26,18 @@ namespace MenuOnlineUdemy.Endpoints
             return group;
         }
 
-        static async Task<Ok<List<VariantDTO>>> GetVariants(IRepositoryVariants repository, IMapper mapper,
+        static async Task<Results<Ok<List<VariantDTO>>, NotFound>> GetVariants(int productId
+            , IRepositoryVariants repositoryVariants, IRepositoryProducts repositoryProducts
+            , IMapper mapper,
             int page = 1, int recordsByPage = 10)
         {
+            if (!await repositoryProducts.IfExists(productId))
+            {
+                return TypedResults.NotFound();
+            }
+
             var pagination = new PaginationDTO { Page = page, RecordsByPage = recordsByPage };
-            var variants = await repository.GetAll(pagination);
+            var variants = await repositoryVariants.GetAll(productId, pagination);
             var variantsDTO = mapper.Map<List<VariantDTO>>(variants); //variants.Select(x => new  VariantDTO { Id = x.Id, Name = x.Name}).ToList();
             return TypedResults.Ok(variantsDTO);
         }
@@ -43,7 +50,9 @@ namespace MenuOnlineUdemy.Endpoints
             return TypedResults.Ok(variantsDTO);
         }
 
-        static async Task<Results<Ok<VariantDTO>, NotFound>> GetVariantsById(IRepositoryVariants repository, int id
+        static async Task<Results<Ok<VariantDTO>, NotFound>> GetVariantsById(int productId
+            , IRepositoryVariants repository
+            , int id
             , IMapper mapper)
         {
             var variant = await repository.GetById(id);
@@ -58,43 +67,59 @@ namespace MenuOnlineUdemy.Endpoints
             return TypedResults.Ok(variantDTO);
         }
 
-        static async Task<Created<VariantDTO>> CreateVariant(CreateVariantDTO createVariantDTO, IRepositoryVariants repository
-            , IMapper mapper)
+        static async Task<Results<Created<VariantDTO>, NotFound>> CreateVariant(int productId, CreateVariantDTO createVariantDTO
+            , IRepositoryVariants repositoryVariants
+            , IRepositoryProducts repositoryProducts, IMapper mapper)
         {
-            var variant = mapper.Map<Variant> (createVariantDTO);
+            if(! await repositoryProducts.IfExists(productId))
+            {
+                return TypedResults.NotFound();
+            }
 
-            var id = await repository.Create(variant);
+            var variant = mapper.Map<Variant> (createVariantDTO);
+            variant.ProductId = productId;
+
+            var id = await repositoryVariants.Create(variant);
 
             var variantDTO = mapper.Map<VariantDTO>(variant);
 
             return TypedResults.Created($"/variants/{id}", variantDTO);
         }
 
-        static async Task<Results<NoContent, NotFound>> UpdateVariant(int id, CreateVariantDTO createVariantDTO, IRepositoryVariants repository
+        static async Task<Results<NoContent, NotFound>> UpdateVariant(int productId, int id
+            , CreateVariantDTO createVariantDTO, IRepositoryVariants repositoryVariants
+            , IRepositoryProducts repositoryProducts
             , IMapper mapper)
         {
-            var exists = await repository.IfExists(id);
-            if (!exists)
+            if(!await repositoryProducts.IfExists(productId))
+            {
+                return TypedResults.NotFound();
+            }
+
+            if (!await repositoryVariants.IfExists(id))
             {
                 return TypedResults.NotFound();
             }
 
             var variant = mapper.Map<Variant>(createVariantDTO);
             variant.Id = id;
+            variant.ProductId = productId;
 
-            await repository.Update(variant);
+            await repositoryVariants.Update(variant);
             return TypedResults.NoContent();
         }
 
-        static async Task<Results<NotFound, NoContent>> DeleteVariant(int id, IRepositoryVariants repository)
+        static async Task<Results<NotFound, NoContent>> DeleteVariant(int productId, int id
+            , IRepositoryVariants repositoryVariants
+            , IRepositoryProducts repositoryProducts)
         {
-            var exists = await repository.IfExists(id);
-            if (!exists)
+
+            if (!await repositoryVariants.IfExists(id))
             {
                 return TypedResults.NotFound();
             }
 
-            await repository.Delete(id);
+            await repositoryVariants.Delete(id);
             return TypedResults.NoContent();
         }
 

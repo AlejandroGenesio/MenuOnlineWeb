@@ -23,6 +23,9 @@ namespace MenuOnlineUdemy.Utilities
             CreateMap<CreateImageDTO, Image>()
                 .ForMember(x => x.File, options => options.Ignore());
             CreateMap<Image, ImageDTO>();
+
+            CreateMap<CreateOrderDTO, Order>();
+            CreateMap<Order, OrderDTO>();
         }
     }
 }

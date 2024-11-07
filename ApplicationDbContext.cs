@@ -23,5 +23,6 @@ namespace MenuOnlineUdemy
         public DbSet<ModifierExtra> ModifierExtras { get; set; }
         public DbSet<ModifierGroup> ModifierGroups { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }
