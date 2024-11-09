@@ -3,6 +3,7 @@ using MenuOnlineUdemy.DTOs;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MenuOnlineUdemy.Endpoints
 {
@@ -21,7 +22,7 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapDelete("/{id:int}", DeleteModifierExtra);
 
-            group.MapGet("/getbyname/{name}", GetModifierExtrasByName);
+            group.MapGet("/getbyname/{name}", GetModifierExtrasByName);            
 
             return group;
         }
@@ -97,6 +98,5 @@ namespace MenuOnlineUdemy.Endpoints
             await repository.Delete(id);
             return TypedResults.NoContent();
         }
-
     }
 }

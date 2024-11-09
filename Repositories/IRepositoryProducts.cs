@@ -16,5 +16,9 @@ namespace MenuOnlineUdemy.Repositories
 
         Task Delete(int id);
         Task<List<Product>> GetByName(string name);
+        Task AssignImages(int id, List<int> imagesIds);
+        Task AssignModifierGroup(int id, List<ProductModifierGroup> modifierGroups);
+
+        void DiscardChanges();
     }
 }

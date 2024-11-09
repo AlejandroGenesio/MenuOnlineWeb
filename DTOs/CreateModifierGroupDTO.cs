@@ -6,7 +6,6 @@ namespace MenuOnlineUdemy.DTOs
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public int GroupId { get; set; } = 0;
         public bool IsMandatory { get; set; } = false;
         public int MinToSelect { get; set; } = 0;
         public decimal MinPriceToBuy { get; set; } = 0;

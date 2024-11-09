@@ -12,6 +12,9 @@ namespace MenuOnlineUdemy.Entities
         public decimal? Price { get; set; }
         public decimal? sell_min_price { get; set; }
         public List<Variant> Variants { get; set; } = new List<Variant>();
+        public List<ProductImage>? ProductImages { get; set; }
+
+        public List<ProductModifierGroup> ProductModifierGroups { get; set; } = new List<ProductModifierGroup>();
 
     }
 } 

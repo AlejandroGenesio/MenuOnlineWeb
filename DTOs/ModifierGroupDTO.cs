@@ -4,9 +4,11 @@ namespace MenuOnlineUdemy.DTOs
 {
     public class ModifierGroupDTO
     {
+        public int Id { get; set; }
+        [StringLength(500)]
         public string? Name { get; set; }
+        [StringLength(1000)]
         public string? Description { get; set; }
-        public int GroupId { get; set; } = 0;
         public bool IsMandatory { get; set; } = false;
         public int MinToSelect { get; set; } = 0;
         public decimal MinPriceToBuy { get; set; } = 0;

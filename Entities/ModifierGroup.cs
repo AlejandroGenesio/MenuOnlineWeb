@@ -9,11 +9,11 @@ namespace MenuOnlineUdemy.Entities
         public string? Name { get; set; }
         [StringLength(1000)]
         public string? Description { get; set; }
-        public int GroupId { get; set; } = 0;
         public bool IsMandatory { get; set; } = false;
         public int MinToSelect { get; set; } = 0;
         public decimal MinPriceToBuy { get; set; } = 0;
         public int GroupStyle { get; set; } = 0;
         public int GroupStyleClosed { get; set; } = 0;
+        public List<ProductModifierGroup> ProductModifierGroups { get; set; } = new List<ProductModifierGroup>();
     }
 }

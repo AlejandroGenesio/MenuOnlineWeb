@@ -54,5 +54,10 @@ namespace MenuOnlineUdemy.Repositories
         {
             return await context.ModifierGroups.Where(a => a.Name.Contains(name)).OrderBy(a => a.Name).ToListAsync();
         }
+
+        public async Task<List<int>> IfTheyExist(List<int> ids)
+        {
+            return await context.Products.Where(a => ids.Contains(a.Id)).Select(a => a.Id).ToListAsync();
+        }
     }
 }

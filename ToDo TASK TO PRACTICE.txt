@@ -1,0 +1,10 @@
+1)
+ProductImportHanddler.cs
+- // TODO: read data from excel
+Completar el bucle para guardar los datos en importDTO (productDTO)  en el Variant
+ej.: importDto.Products
+importDto.Variants
+2) ProductBulkImportBusinessLogic.s
+int id = await productRepository.Create(productEntityToSave);
+
+Si el ID no es null y existe, hacer un update en vez de create

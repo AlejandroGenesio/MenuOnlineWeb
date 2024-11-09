@@ -1,4 +1,5 @@
-﻿using MenuOnlineUdemy.DTOs;
+﻿using AutoMapper;
+using MenuOnlineUdemy.DTOs;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,14 @@ namespace MenuOnlineUdemy.Repositories
     public class RepositoryProducts : IRepositoryProducts
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
         private readonly HttpContext httpContext;
 
-        public RepositoryProducts(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public RepositoryProducts(ApplicationDbContext context,
+            IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
             httpContext = httpContextAccessor.HttpContext;
         }
         public async Task<int> Create(Product product)
@@ -54,6 +58,36 @@ namespace MenuOnlineUdemy.Repositories
         public async Task<List<Product>> GetByName(string name)
         {
             return await context.Products.Where(a => a.Name.Contains(name)).OrderBy(a => a.Name).ToListAsync();
+        }
+
+        public async Task AssignImages(int id, List<int> imagesIds)
+        {
+            var product = await context.Products.Include(p => p.ProductImages).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product is null)
+            {
+                throw new ArgumentException($"The id {id} does not exist for this context");
+            }
+
+            var productImages = imagesIds.Select(imageId => new ProductImage() { ImageId = imageId });
+
+            product.ProductImages = mapper.Map(productImages, product.ProductImages);
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task AssignModifierGroup(int id, List<ProductModifierGroup> modifierGroups)
+        {
+            var product = await context.Products.Include(x => x.ProductModifierGroups).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product is null)
+            {
+                throw new ArgumentException($"Id: {id} does not exist.");
+            }
+
+            product.ProductModifierGroups = mapper.Map(modifierGroups, product.ProductModifierGroups);
+
+            await context.SaveChangesAsync();
         }
     }
 }

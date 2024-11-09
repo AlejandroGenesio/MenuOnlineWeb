@@ -2,7 +2,9 @@
 using MenuOnlineUdemy.DTOs;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
+using MenuOnlineUdemy.services.Import;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MenuOnlineUdemy.Endpoints
 {
@@ -22,6 +24,12 @@ namespace MenuOnlineUdemy.Endpoints
             group.MapDelete("/{id:int}", DeleteProduct);
 
             group.MapGet("/getbyname/{name}", GetProductsByName);
+
+            group.MapPost("/{id:int}/assignimages", AssignImages);
+
+            group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup);
+
+            group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery();
 
             return group;
         }
@@ -61,7 +69,7 @@ namespace MenuOnlineUdemy.Endpoints
         static async Task<Created<ProductDTO>> CreateProduct(CreateProductDTO createProductDTO, IRepositoryProducts repository
             , IMapper mapper)
         {
-            var product = mapper.Map<Product> (createProductDTO);
+            var product = mapper.Map<Product>(createProductDTO);
 
             var id = await repository.Create(product);
 
@@ -96,6 +104,66 @@ namespace MenuOnlineUdemy.Endpoints
 
             await repository.Delete(id);
             return TypedResults.NoContent();
+        }
+
+        static async Task<Results<NoContent, NotFound, BadRequest<string>>> AssignImages(int id, List<int> imagesIds,
+            IRepositoryProducts repositoryProducts, IRepositoryImages repositoryImages)
+        {
+            if (!await repositoryProducts.IfExists(id))
+            {
+                return TypedResults.NotFound();
+            }
+
+            var imagesExisting = new List<int>();
+            if (imagesIds.Count != 0)
+            {
+                imagesExisting = await repositoryImages.IfTHeyExist(imagesIds);
+            }
+
+            if (imagesExisting.Count != imagesIds.Count)
+            {
+                var imagesNonExisting = imagesIds.Except(imagesExisting);
+
+                return TypedResults.BadRequest($"Images id {string.Join(",", imagesNonExisting)} do not exist.");
+            }
+
+            await repositoryProducts.AssignImages(id, imagesIds);
+            return TypedResults.NoContent();
+        }
+
+        static async Task<Results<NotFound, NoContent, BadRequest<string>>> AssignModifierGroup(int id,
+            List<AssignProductModifierGroup> modifierDTO, IRepositoryProducts repositoryProducts,
+            IRepositoryModifierGroups repositoryModifierGroups, IMapper mapper)
+        {
+            if (!await repositoryProducts.IfExists(id))
+            {
+                return TypedResults.NotFound();
+            }
+
+            var existingModifierGroups = new List<int>();
+            var modifierGroupIds = modifierDTO.Select(a => a.ModifierGroupId).ToList();
+
+            if (modifierDTO.Count != 0)
+            {
+                existingModifierGroups = await repositoryModifierGroups.IfTheyExist(modifierGroupIds);
+            }
+
+            if (existingModifierGroups.Count != modifierGroupIds.Count)
+            {
+                var nonExistingModifiers = modifierGroupIds.Except(existingModifierGroups);
+                return TypedResults.BadRequest($"These modifier groups do not exist: {string.Join(",", nonExistingModifiers)}");
+            }
+
+            var modifierGroups = mapper.Map<List<ProductModifierGroup>>(modifierDTO);
+            await repositoryProducts.AssignModifierGroup(id, modifierGroups);
+            return TypedResults.NoContent();
+        }
+
+        static async Task<IActionResult> ImportProductFile(IFormFile file, IProductBulkImportHandler productBulkImportHandler)
+        {
+            bool importSucceeded = productBulkImportHandler.Import(file);
+
+            return new OkObjectResult($"OK = {importSucceeded}");
         }
 
     }
