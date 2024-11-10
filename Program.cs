@@ -24,7 +24,7 @@ builder.Services.AddScoped<IRepositoryImages, RepositoryImages>();
 builder.Services.AddScoped<IRepositoryOrders, RepositoryOrders>();
 
 builder.Services.AddScoped<IFileStorage, LocalStorage>();
-builder.Services.AddSingleton<IProductBulkImportHandler, ProductBulkImportHandler>();
+//builder.Services.AddSingleton<IProductBulkImportHandler, ProductBulkImportHandler>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(Program));

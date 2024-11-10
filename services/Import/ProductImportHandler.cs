@@ -30,6 +30,11 @@ namespace MenuOnlineUdemy.services.Import
             return true;
         }
 
+        bool IProductBulkImportHandler.Import(IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
+
         async Task ImportFile(IFormFile file)
         {
             using (var stream = new MemoryStream())
@@ -40,9 +45,19 @@ namespace MenuOnlineUdemy.services.Import
 
                 // Use EPPlus to load the Excel file
                 using (var package = new ExcelPackage(stream))
-                {                    
-                    var productWorkshet = package.Workbook.Worksheets[0]; // Get the first worksheet
-                    var variantWorksheet = package.Workbook.Worksheets[1]; // Get the first worksheet
+                {
+                    var productWorkshet = package.Workbook.Worksheets[0]; // Products
+                    var variantWorksheet = package.Workbook.Worksheets[1]; // Variants
+
+                    for (int row = productWorkshet.Dimension.Start.Row; row <= productWorkshet.Dimension.End.Row; row++)
+                    {
+                        for (int col = productWorkshet.Dimension.Start.Column; col <= productWorkshet.Dimension.End.Column; col++)
+                        {
+                            var cellValue = productWorkshet.Cells[row, col].Value;
+                            Console.Write(cellValue + "\t");
+                        }
+                        Console.WriteLine();
+                    }
 
 
                     // TODO: read data from excel
@@ -62,7 +77,7 @@ namespace MenuOnlineUdemy.services.Import
 
                     ProductBulkImportDTO importDto = new ProductBulkImportDTO();
 
-                   await  importBusinessLogic.Import(importDto);
+                    await importBusinessLogic.Import(importDto);
 
 
                 }
@@ -70,7 +85,7 @@ namespace MenuOnlineUdemy.services.Import
         }
 
 
-        
+
 
     }
 

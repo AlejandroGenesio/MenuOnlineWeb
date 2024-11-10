@@ -89,5 +89,10 @@ namespace MenuOnlineUdemy.Repositories
 
             await context.SaveChangesAsync();
         }
+
+        public void DiscardChanges()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

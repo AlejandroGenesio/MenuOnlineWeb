@@ -29,7 +29,7 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup);
 
-            group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery();
+            //group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery();
 
             return group;
         }
