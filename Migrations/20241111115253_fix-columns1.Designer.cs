@@ -4,6 +4,7 @@ using MenuOnlineUdemy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MenuOnlineUdemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241111115253_fix-columns1")]
+    partial class fixcolumns1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,8 +55,9 @@ namespace MenuOnlineUdemy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal?>("ExtraPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("GroupStyle")
                         .HasColumnType("int");
@@ -61,13 +65,12 @@ namespace MenuOnlineUdemy.Migrations
                     b.Property<int>("GroupStyleClosed")
                         .HasColumnType("int");
 
-                    b.Property<string>("Label")
+                    b.Property<int>("MinToSelect")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("OptionsGroup")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
 

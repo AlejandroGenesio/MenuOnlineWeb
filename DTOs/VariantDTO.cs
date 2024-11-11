@@ -7,9 +7,9 @@ namespace MenuOnlineUdemy.DTOs
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
-        public decimal price { get; set; }
-        public int stock { get; set; }
-        public int ProductId { get; set; }       
+        public decimal Price { get; set; } = 0;
+        public int Stock { get; set; } = 0;
+        public int ProductId { get; set; }
     }
 
 
@@ -18,8 +18,8 @@ namespace MenuOnlineUdemy.DTOs
          int Id { get; set; }
          string? Name { get; set; }
          string? Description { get; set; }
-         decimal price { get; set; }
-         int stock { get; set; }      
+         decimal Price { get; set; }
+         int Stock { get; set; }      
     }
 
 

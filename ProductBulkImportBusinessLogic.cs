@@ -58,8 +58,8 @@ namespace MenuOnlineUdemy
                         {
                             Name = variant.Name,
                             Description = variant.Description,
-                            price = variant.price,
-                             stock = variant.stock                             
+                            price = variant.Price,
+                             stock = variant.Stock                             
                         };
 
 

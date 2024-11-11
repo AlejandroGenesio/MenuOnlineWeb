@@ -31,7 +31,7 @@ namespace MenuOnlineUdemy.Repositories
         {
             var queryable = context.ModifierGroups.AsQueryable();
             await httpContext.InsertParametersPaginationHeader(queryable);
-            return await queryable.AsNoTracking().OrderBy(x => x.Name).Pagination(paginationDTO).ToListAsync();
+            return await queryable.AsNoTracking().OrderBy(x => x.Label).Pagination(paginationDTO).ToListAsync();
         }
 
         public async Task<ModifierGroup?> GetById(int id)
@@ -52,7 +52,7 @@ namespace MenuOnlineUdemy.Repositories
 
         public async Task<List<ModifierGroup>> GetByName(string name)
         {
-            return await context.ModifierGroups.Where(a => a.Name.Contains(name)).OrderBy(a => a.Name).ToListAsync();
+            return await context.ModifierGroups.Where(a => a.Label.Contains(name)).OrderBy(a => a.Label).ToListAsync();
         }
 
         public async Task<List<int>> IfTheyExist(List<int> ids)
