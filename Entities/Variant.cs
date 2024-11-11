@@ -9,8 +9,8 @@ namespace MenuOnlineUdemy.Entities
         public string? Name { get; set; }
         [StringLength(1000)]
         public string? Description { get; set; }
-        public decimal price { get; set; } = 0;
-        public int stock { get; set; } = 0;
+        public decimal Price { get; set; } = 0;
+        public int Stock { get; set; } = 0;
         public int ProductId { get; set; }
     }
 }
