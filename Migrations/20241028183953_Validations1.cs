@@ -65,7 +65,7 @@ namespace MenuOnlineUdemy.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModifiersExtras",
+                name: "ModifiersOptions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -76,7 +76,7 @@ namespace MenuOnlineUdemy.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModifiersExtras", x => x.Id);
+                    table.PrimaryKey("PK_ModifiersOptions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,7 +106,7 @@ namespace MenuOnlineUdemy.Migrations
                 name: "ModifierGroups");
 
             migrationBuilder.DropTable(
-                name: "ModifiersExtras");
+                name: "ModifiersOptions");
 
             migrationBuilder.DropTable(
                 name: "Variants");

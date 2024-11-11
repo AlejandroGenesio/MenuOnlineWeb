@@ -3,18 +3,18 @@ using MenuOnlineUdemy.Entities;
 
 namespace MenuOnlineUdemy.Repositories
 {
-    public interface IRepositoryModifierExtras
+    public interface IRepositoryModifierOptions
     {
-        Task<int> Create(ModifierExtra modifierExtra);
+        Task<int> Create(ModifierOption modifierOption);
 
-        Task<List<ModifierExtra>> GetAll(PaginationDTO paginationDTO);
-        Task<ModifierExtra?> GetById(int id);
+        Task<List<ModifierOption>> GetAll(PaginationDTO paginationDTO);
+        Task<ModifierOption?> GetById(int id);
 
         Task<bool> IfExists(int id);
 
-        Task Update(ModifierExtra modifierExtra);
+        Task Update(ModifierOption modifierOption);
 
         Task Delete(int id);
-        Task<List<ModifierExtra>> GetByName(string name);
+        Task<List<ModifierOption>> GetByName(string name);
     }
 }

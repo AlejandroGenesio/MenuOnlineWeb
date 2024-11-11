@@ -23,7 +23,7 @@ namespace MenuOnlineUdemy
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Variant> Variants { get; set; }
-        public DbSet<ModifierExtra> ModifierExtras { get; set; }
+        public DbSet<ModifierOption> ModifierOptions { get; set; }
         public DbSet<ModifierGroup> ModifierGroups { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Order> Orders { get; set; }

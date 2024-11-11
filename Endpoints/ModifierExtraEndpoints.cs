@@ -7,71 +7,71 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MenuOnlineUdemy.Endpoints
 {
-    public static class ModifierExtraEndpoints
+    public static class ModifierOptionEndpoints
     {
-        public static RouteGroupBuilder MapModifierExtras(this RouteGroupBuilder group)
+        public static RouteGroupBuilder MapModifierOptions(this RouteGroupBuilder group)
         {
 
-            group.MapGet("/", GetModifierExtras);
+            group.MapGet("/", GetModifierOptions);
 
-            group.MapGet("/{id:int}", GetModifierExtrasById);
+            group.MapGet("/{id:int}", GetModifierOptionsById);
 
-            group.MapPost("/", CreateModifierExtra);
+            group.MapPost("/", CreateModifierOption);
 
-            group.MapPut("/{id:int}", UpdateModifierExtra);
+            group.MapPut("/{id:int}", UpdateModifierOption);
 
-            group.MapDelete("/{id:int}", DeleteModifierExtra);
+            group.MapDelete("/{id:int}", DeleteModifierOption);
 
-            group.MapGet("/getbyname/{name}", GetModifierExtrasByName);            
+            group.MapGet("/getbyname/{name}", GetModifierOptionsByName);            
 
             return group;
         }
 
-        static async Task<Ok<List<ModifierExtraDTO>>> GetModifierExtras(IRepositoryModifierExtras repository, IMapper mapper,
+        static async Task<Ok<List<ModifierOptionDTO>>> GetModifierOptions(IRepositoryModifierOptions repository, IMapper mapper,
             int page = 1, int recordsByPage = 10)
         {
             var pagination = new PaginationDTO { Page = page, RecordsByPage = recordsByPage };
-            var modifierExtras = await repository.GetAll(pagination);
-            var modifierExtrasDTO = mapper.Map<List<ModifierExtraDTO>>(modifierExtras); //modifierExtras.Select(x => new  ModifierExtraDTO { Id = x.Id, Name = x.Name}).ToList();
-            return TypedResults.Ok(modifierExtrasDTO);
+            var modifierOptions = await repository.GetAll(pagination);
+            var modifierOptionsDTO = mapper.Map<List<ModifierOptionDTO>>(modifierOptions); //modifierOptions.Select(x => new  ModifierOptionDTO { Id = x.Id, Name = x.Name}).ToList();
+            return TypedResults.Ok(modifierOptionsDTO);
         }
 
-        static async Task<Ok<List<ModifierExtraDTO>>> GetModifierExtrasByName(string name, IRepositoryModifierExtras repository, IMapper mapper)
+        static async Task<Ok<List<ModifierOptionDTO>>> GetModifierOptionsByName(string name, IRepositoryModifierOptions repository, IMapper mapper)
         {
 
-            var modifierExtras = await repository.GetByName(name);
-            var modifierExtrasDTO = mapper.Map<List<ModifierExtraDTO>>(modifierExtras);
-            return TypedResults.Ok(modifierExtrasDTO);
+            var modifierOptions = await repository.GetByName(name);
+            var modifierOptionsDTO = mapper.Map<List<ModifierOptionDTO>>(modifierOptions);
+            return TypedResults.Ok(modifierOptionsDTO);
         }
 
-        static async Task<Results<Ok<ModifierExtraDTO>, NotFound>> GetModifierExtrasById(IRepositoryModifierExtras repository, int id
+        static async Task<Results<Ok<ModifierOptionDTO>, NotFound>> GetModifierOptionsById(IRepositoryModifierOptions repository, int id
             , IMapper mapper)
         {
-            var modifierExtra = await repository.GetById(id);
+            var modifierOption = await repository.GetById(id);
 
-            if (modifierExtra == null)
+            if (modifierOption == null)
             {
                 return TypedResults.NotFound();
             }
 
-            var modifierExtraDTO = mapper.Map<ModifierExtraDTO>(modifierExtra);
+            var modifierOptionDTO = mapper.Map<ModifierOptionDTO>(modifierOption);
 
-            return TypedResults.Ok(modifierExtraDTO);
+            return TypedResults.Ok(modifierOptionDTO);
         }
 
-        static async Task<Created<ModifierExtraDTO>> CreateModifierExtra(CreateModifierExtraDTO createModifierExtraDTO, IRepositoryModifierExtras repository
+        static async Task<Created<ModifierOptionDTO>> CreateModifierOption(CreateModifierOptionDTO createModifierOptionDTO, IRepositoryModifierOptions repository
             , IMapper mapper)
         {
-            var modifierExtra = mapper.Map<ModifierExtra> (createModifierExtraDTO);
+            var modifierOption = mapper.Map<ModifierOption> (createModifierOptionDTO);
 
-            var id = await repository.Create(modifierExtra);
+            var id = await repository.Create(modifierOption);
 
-            var modifierExtraDTO = mapper.Map<ModifierExtraDTO>(modifierExtra);
+            var modifierOptionDTO = mapper.Map<ModifierOptionDTO>(modifierOption);
 
-            return TypedResults.Created($"/modifierExtras/{id}", modifierExtraDTO);
+            return TypedResults.Created($"/modifierOptions/{id}", modifierOptionDTO);
         }
 
-        static async Task<Results<NoContent, NotFound>> UpdateModifierExtra(int id, CreateModifierExtraDTO createModifierExtraDTO, IRepositoryModifierExtras repository
+        static async Task<Results<NoContent, NotFound>> UpdateModifierOption(int id, CreateModifierOptionDTO createModifierOptionDTO, IRepositoryModifierOptions repository
             , IMapper mapper)
         {
             var exists = await repository.IfExists(id);
@@ -80,14 +80,14 @@ namespace MenuOnlineUdemy.Endpoints
                 return TypedResults.NotFound();
             }
 
-            var modifierExtra = mapper.Map<ModifierExtra>(createModifierExtraDTO);
-            modifierExtra.Id = id;
+            var modifierOption = mapper.Map<ModifierOption>(createModifierOptionDTO);
+            modifierOption.Id = id;
 
-            await repository.Update(modifierExtra);
+            await repository.Update(modifierOption);
             return TypedResults.NoContent();
         }
 
-        static async Task<Results<NotFound, NoContent>> DeleteModifierExtra(int id, IRepositoryModifierExtras repository)
+        static async Task<Results<NotFound, NoContent>> DeleteModifierOption(int id, IRepositoryModifierOptions repository)
         {
             var exists = await repository.IfExists(id);
             if (!exists)

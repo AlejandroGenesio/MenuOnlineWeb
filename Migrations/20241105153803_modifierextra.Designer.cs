@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MenuOnlineUdemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241105153803_modifierextra")]
-    partial class modifierextra
+    [Migration("20241105153803_modifierOption")]
+    partial class modifierOption
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,7 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierExtra", b =>
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,7 +68,7 @@ namespace MenuOnlineUdemy.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ModifierExtras");
+                    b.ToTable("ModifierOptions");
                 });
 
             modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierGroup", b =>

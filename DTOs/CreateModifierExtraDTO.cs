@@ -2,7 +2,7 @@
 
 namespace MenuOnlineUdemy.DTOs
 {
-    public class CreateModifierExtraDTO
+    public class CreateModifierOptionDTO
     {
         public string? Name { get; set; }
         public string? Description { get; set; }

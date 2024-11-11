@@ -2,7 +2,7 @@
 
 namespace MenuOnlineUdemy.Entities
 {
-    public class ModifierExtra
+    public class ModifierOption
     {
         public int Id { get; set; }
         [StringLength(500)]
