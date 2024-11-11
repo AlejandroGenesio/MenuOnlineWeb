@@ -5,16 +5,16 @@
 namespace MenuOnlineUdemy.Migrations
 {
     /// <inheritdoc />
-    public partial class ModifierExtra : Migration
+    public partial class changenametablemodifier2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ModifiersOptions");
+                name: "ModifierExtras");
 
             migrationBuilder.CreateTable(
-                name: "ModifierExtras",
+                name: "ModifierOptions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -25,7 +25,7 @@ namespace MenuOnlineUdemy.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModifierExtras", x => x.Id);
+                    table.PrimaryKey("PK_ModifierOptions", x => x.Id);
                 });
         }
 
@@ -33,10 +33,10 @@ namespace MenuOnlineUdemy.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ModifierExtras");
+                name: "ModifierOptions");
 
             migrationBuilder.CreateTable(
-                name: "ModifiersOptions",
+                name: "ModifierExtras",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -47,7 +47,7 @@ namespace MenuOnlineUdemy.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModifiersOptions", x => x.Id);
+                    table.PrimaryKey("PK_ModifierExtras", x => x.Id);
                 });
         }
     }

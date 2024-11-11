@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MenuOnlineUdemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241107094341_Orders")]
-    partial class Orders
+    [Migration("20241111105114_change-name-table-modifier2")]
+    partial class changenametablemodifier2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,30 +47,6 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierExtra", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ModifierExtras");
-                });
-
             modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierGroup", b =>
                 {
                     b.Property<int>("Id")
@@ -82,9 +58,6 @@ namespace MenuOnlineUdemy.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("GroupId")
-                        .HasColumnType("int");
 
                     b.Property<int>("GroupStyle")
                         .HasColumnType("int");
@@ -108,6 +81,30 @@ namespace MenuOnlineUdemy.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ModifierGroups");
+                });
+
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ModifierOptions");
                 });
 
             modelBuilder.Entity("MenuOnlineUdemy.Entities.Order", b =>
@@ -163,6 +160,39 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductImage", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "ImageId");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductModifierGroup", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ModifierGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProductId", "ModifierGroupId");
+
+                    b.HasIndex("ModifierGroupId");
+
+                    b.ToTable("ProductModifierGroups");
+                });
+
             modelBuilder.Entity("MenuOnlineUdemy.Entities.Variant", b =>
                 {
                     b.Property<int>("Id")
@@ -195,6 +225,44 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Variants");
                 });
 
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductImage", b =>
+                {
+                    b.HasOne("MenuOnlineUdemy.Entities.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MenuOnlineUdemy.Entities.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductModifierGroup", b =>
+                {
+                    b.HasOne("MenuOnlineUdemy.Entities.ModifierGroup", "ModifierGroup")
+                        .WithMany("ProductModifierGroups")
+                        .HasForeignKey("ModifierGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MenuOnlineUdemy.Entities.Product", "Product")
+                        .WithMany("ProductModifierGroups")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ModifierGroup");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("MenuOnlineUdemy.Entities.Variant", b =>
                 {
                     b.HasOne("MenuOnlineUdemy.Entities.Product", null)
@@ -204,8 +272,17 @@ namespace MenuOnlineUdemy.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierGroup", b =>
+                {
+                    b.Navigation("ProductModifierGroups");
+                });
+
             modelBuilder.Entity("MenuOnlineUdemy.Entities.Product", b =>
                 {
+                    b.Navigation("ProductImages");
+
+                    b.Navigation("ProductModifierGroups");
+
                     b.Navigation("Variants");
                 });
 #pragma warning restore 612, 618
