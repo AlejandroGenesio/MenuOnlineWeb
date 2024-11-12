@@ -6,5 +6,6 @@
         public int ImageId { get; set; }
         public Product? Product {  get; set; }
         public Image? Image { get; set; }
+        public int Order { get; set; }
     }
 }
