@@ -9,5 +9,6 @@ namespace MenuOnlineUdemy.Entities
         public string? Description { get; set; }
         [StringLength(150)]
         public string? File {  get; set; }
+        public List<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }
 }
