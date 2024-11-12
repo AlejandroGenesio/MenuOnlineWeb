@@ -32,7 +32,8 @@ namespace MenuOnlineUdemy.services
         public async Task<string> Storage(string container, IFormFile file)
         {
             var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{extension}";
+            string rndValue = Guid.NewGuid().ToString();
+            var fileName = $"{file.FileName.Split('.')[0] + '-' + rndValue.Substring(rndValue.Length - 11)}{extension}";
             string folder = Path.Combine(env.WebRootPath, container);
 
             if (!Directory.Exists(folder)) { }

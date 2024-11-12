@@ -17,7 +17,7 @@ namespace MenuOnlineUdemy.Repositories
         {
             this.context = context;
             this.mapper = mapper;
-            httpContext = httpContextAccessor.HttpContext;
+            httpContext = httpContextAccessor.HttpContext!;
         }
         public async Task<int> Create(Product product)
         {
@@ -41,7 +41,9 @@ namespace MenuOnlineUdemy.Repositories
 
         public async Task<Product?> GetById(int id)
         {
-            return await context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            return await context.Products
+                .Include(p => p.ProductImages)
+                .AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<bool> IfExists(int id)
