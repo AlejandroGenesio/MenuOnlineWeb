@@ -9,7 +9,11 @@ namespace MenuOnlineUdemy.Utilities
         public AutoMapperProfiles()
         {
             CreateMap<CreateProductDTO, Product>();
-            CreateMap<Product, ProductDTO>();
+            CreateMap<Product, ProductDTO>()
+                .ForMember(p => p.Images, entity => entity.MapFrom(p => 
+                p.ProductImages.Select(ap => 
+                    new ProductImageDTO { Id = ap.ImageId, 
+                                          File = ap.Image.File})));
 
             CreateMap<CreateVariantDTO, Variant>();
             CreateMap<Variant, VariantDTO>();

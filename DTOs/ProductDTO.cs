@@ -10,5 +10,6 @@ namespace MenuOnlineUdemy.DTOs
         public decimal? Price { get; set; }
         public int? SellMinOptions { get; set; }
         public int? SellMinPrice { get; set; }
+        public List<ProductImageDTO> Images { get; set; } = new List<ProductImageDTO>();
     }
 }

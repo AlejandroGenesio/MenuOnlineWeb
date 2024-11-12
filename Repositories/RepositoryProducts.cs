@@ -43,6 +43,8 @@ namespace MenuOnlineUdemy.Repositories
         {
             return await context.Products
                 .Include(p => p.ProductImages)
+                .Include(p => p.ProductImages.OrderBy(a => a.Order))
+                    .ThenInclude(ap => ap.Image)
                 .AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 
