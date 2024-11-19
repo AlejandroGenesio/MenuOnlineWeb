@@ -15,6 +15,7 @@ namespace MenuOnlineUdemy.Utilities
                     new ProductImageDTO { Id = ap.ImageId, 
                                           File = ap.Image.File})));
 
+
             CreateMap<CreateVariantDTO, Variant>();
             CreateMap<Variant, VariantDTO>();
 

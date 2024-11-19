@@ -6,6 +6,7 @@ using MenuOnlineUdemy.services;
 using MenuOnlineUdemy.services.Import;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,12 +26,14 @@ builder.Services.AddScoped<IRepositoryOrders, RepositoryOrders>();
 builder.Services.AddScoped<IRepositoryCategories, RepositoryCategories>();
 
 builder.Services.AddScoped<IFileStorage, LocalStorage>();
-//builder.Services.AddSingleton<IProductBulkImportHandler, ProductBulkImportHandler>();
+builder.Services.AddScoped<IProductBulkImportHandler, ProductBulkImportHandler>();
+builder.Services.AddScoped<ProductBulkImportBusinessLogic>();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-
+EnableExcelLicense();
 
 
 // Services END
@@ -57,3 +60,8 @@ app.MapGroup("/categories").MapCategories();
 // Middleware END
 
 app.Run();
+
+static void EnableExcelLicense()
+{
+    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+}

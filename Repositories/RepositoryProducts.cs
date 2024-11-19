@@ -98,5 +98,10 @@ namespace MenuOnlineUdemy.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public bool IsEmptyId(int value)
+        {
+            return value == 0;
+        }
     }
 }

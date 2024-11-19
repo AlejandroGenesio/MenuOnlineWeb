@@ -2,9 +2,9 @@
 {
     public class ProductBulkImportDTO
     {
-        public List<ProductDTO> Products{ get; set; }
+        public List<ProductDTO> Products{ get; set; } = new();
 
-        public List<ImportProductVariantDTO> Variants { get; set; }
+        public List<ImportProductVariantDTO> Variants { get; set; } = new();
 
     }
 }

@@ -29,7 +29,7 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup);
 
-            //group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery();
+            group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery();
 
             return group;
         }
@@ -161,7 +161,7 @@ namespace MenuOnlineUdemy.Endpoints
 
         static async Task<IActionResult> ImportProductFile(IFormFile file, IProductBulkImportHandler productBulkImportHandler)
         {
-            bool importSucceeded = productBulkImportHandler.Import(file);
+            bool importSucceeded = await productBulkImportHandler.Import(file);
 
             return new OkObjectResult($"OK = {importSucceeded}");
         }

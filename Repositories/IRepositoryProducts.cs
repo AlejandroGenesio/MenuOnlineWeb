@@ -19,6 +19,7 @@ namespace MenuOnlineUdemy.Repositories
         Task AssignImages(int id, List<int> imagesIds);
         Task AssignModifierGroup(int id, List<ProductModifierGroup> modifierGroups);
 
-        void DiscardChanges();
+        void DiscardChanges();        
+        bool IsEmptyId(int value);
     }
 }

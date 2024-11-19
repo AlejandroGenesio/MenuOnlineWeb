@@ -18,70 +18,86 @@ namespace MenuOnlineUdemy
             this.repositoryVariants = repositoryVariants;
         }
 
-        public async Task Import (ProductBulkImportDTO importContainer)
+        public async Task Import(ProductBulkImportDTO importContainer)
         {
             // Loop over each product
+            TransactionScope transactionScope;
             try
             {
                 var productNameLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-                using (var transactionScope = new TransactionScope(TransactionScopeOption.RequiresNew))
+                using (transactionScope = new TransactionScope(TransactionScopeOption.RequiresNew))
                 {
                     // Save products
-                    foreach(var product in importContainer.Products)
+                    foreach (ProductDTO product in importContainer.Products)
                     {
-                        var productEntityToSave = mapper.Map<Product>(product);
-                        // TODO: check for null
-                       
-                        // Buscar por ID
-                        // Por nombre...
+                        int id;
 
-                        int id = await productRepository.Create(productEntityToSave);
-
-
-                        productNameLookup.Add(productEntityToSave.Name, id);
-                    }
-
-                    // Save Variants
-
-                    foreach (var variant in importContainer.Variants)
-                    {
-                        if (!productNameLookup.TryGetValue(variant.ProductName??string.Empty, out int productId))
+                        var createProductDto = new CreateProductDTO
                         {
-                            // TODO: Error, 
-                            continue;
-
-                        }
-                      
-
-                        var variantToSave = new CreateVariantDTO
-                        {
-                            Name = variant.Name,
-                            Description = variant.Description,
-                            price = variant.Price,
-                             stock = variant.Stock                             
+                            Description = product.Description,
+                            Name = product.Name,
+                            Price = product.Price,
+                            SellMinOptions = product.SellMinOptions,
+                            SellMinPrice = product.SellMinPrice
                         };
 
+                        var productToSaveOrCreate = mapper.Map<Product>(createProductDto);
 
-                        var variantEntity = mapper.Map<Variant>(variantToSave);
-                        variantEntity.ProductId = productId;
 
-                        var id = await repositoryVariants.Create(variantEntity);
+                        if (productRepository.IsEmptyId(product.Id) ){                           
+                            id = await productRepository.Create(productToSaveOrCreate);
+                        }
+                        else
+                        {
+                           var existingProduct = productRepository.GetById(product.Id);
+                            await productRepository.Update(productToSaveOrCreate);
+                        }
+
+                        productNameLookup.Add(productToSaveOrCreate.Name, productToSaveOrCreate.Id);
                     }
+
+                    transactionScope.Complete();
+                    // Save Variants
+
+                    //foreach (var variant in importContainer.Variants)
+                    //{
+                    //    if (!productNameLookup.TryGetValue(variant.ProductName??string.Empty, out int productId))
+                    //    {
+                    //        // TODO: Error, 
+                    //        continue;
+
+                    //    }
+
+
+                    //    var variantToSave = new CreateVariantDTO
+                    //    {
+                    //        Name = variant.Name,
+                    //        Description = variant.Description,
+                    //        price = variant.Price,
+                    //         stock = variant.Stock                             
+                    //    };
+
+
+                    //    var variantEntity = mapper.Map<Variant>(variantToSave);
+                    //    variantEntity.ProductId = productId;
+
+                    //    var id = await repositoryVariants.Create(variantEntity);
+                    //}
 
                 }
             }
             catch (Exception e)
             {
-                productRepository.DiscardChanges();
+                //productRepository.DiscardChanges();                
                 throw;
             }
 
-        
+
 
             // Map produt name to product Id
             // Rollback if fail
-            
+
             // Create product variant dto  with product ID
 
             return;

@@ -9,7 +9,7 @@ namespace MenuOnlineUdemy.DTOs
         public string? Description { get; set; }
         public decimal? Price { get; set; }
         public int? SellMinOptions { get; set; }
-        public int? SellMinPrice { get; set; }
+        public decimal? SellMinPrice { get; set; }
         public List<ProductImageDTO> Images { get; set; } = new List<ProductImageDTO>();
     }
 }
