@@ -21,5 +21,6 @@ namespace MenuOnlineUdemy.Repositories
 
         void DiscardChanges();        
         bool IsEmptyId(int value);
+        Task AssignCategories(int id, List<int> categoriesIds);
     }
 }

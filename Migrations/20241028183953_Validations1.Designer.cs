@@ -46,7 +46,7 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierExtras", b =>
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierOptions", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

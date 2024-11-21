@@ -11,7 +11,7 @@ namespace MenuOnlineUdemy.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ModifierExtras");
+                name: "ModifierOptions");
 
             migrationBuilder.CreateTable(
                 name: "ModifierOptions",
@@ -36,7 +36,7 @@ namespace MenuOnlineUdemy.Migrations
                 name: "ModifierOptions");
 
             migrationBuilder.CreateTable(
-                name: "ModifierExtras",
+                name: "ModifierOptions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -47,7 +47,7 @@ namespace MenuOnlineUdemy.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModifierExtras", x => x.Id);
+                    table.PrimaryKey("PK_ModifierOptions", x => x.Id);
                 });
         }
     }

@@ -59,5 +59,10 @@ namespace MenuOnlineUdemy.Repositories
             return await context.Categories.Where(a => a.Name.Contains(name)).OrderBy(a => a.Name).ToListAsync();
         }
 
+        public async Task<List<int>> IfTheyExist(List<int> ids)
+        {
+            return await context.Categories.Where(g => ids.Contains(g.Id)).Select(g => g.Id).ToListAsync();
+        }
+
     }
 }

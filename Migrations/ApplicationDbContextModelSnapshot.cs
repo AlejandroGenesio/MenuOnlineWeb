@@ -181,6 +181,21 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductCategory", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ProductCategories");
+                });
+
             modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductImage", b =>
                 {
                     b.Property<int>("ProductId")
@@ -249,6 +264,25 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("Variants");
                 });
 
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductCategory", b =>
+                {
+                    b.HasOne("MenuOnlineUdemy.Entities.Category", "Category")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MenuOnlineUdemy.Entities.Product", "Product")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("MenuOnlineUdemy.Entities.ProductImage", b =>
                 {
                     b.HasOne("MenuOnlineUdemy.Entities.Image", "Image")
@@ -296,6 +330,11 @@ namespace MenuOnlineUdemy.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.Category", b =>
+                {
+                    b.Navigation("ProductCategories");
+                });
+
             modelBuilder.Entity("MenuOnlineUdemy.Entities.Image", b =>
                 {
                     b.Navigation("ProductImages");
@@ -308,6 +347,8 @@ namespace MenuOnlineUdemy.Migrations
 
             modelBuilder.Entity("MenuOnlineUdemy.Entities.Product", b =>
                 {
+                    b.Navigation("ProductCategories");
+
                     b.Navigation("ProductImages");
 
                     b.Navigation("ProductModifierGroups");

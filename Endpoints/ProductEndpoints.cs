@@ -29,6 +29,8 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup);
 
+            group.MapPost("/{id:int}/assigncategories", AssignCategories);
+
             group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery();
 
             return group;
@@ -128,6 +130,31 @@ namespace MenuOnlineUdemy.Endpoints
             }
 
             await repositoryProducts.AssignImages(id, imagesIds);
+            return TypedResults.NoContent();
+        }
+
+        static async Task<Results<NoContent, NotFound, BadRequest<string>>> AssignCategories(int id, List<int> categoriesIds,
+            IRepositoryProducts repositoryProducts, IRepositoryCategories repositoryCategories)
+        {
+            if (!await repositoryProducts.IfExists(id))
+            {
+                return TypedResults.NotFound();
+            }
+
+            var categoriesExisting = new List<int>();
+            if (categoriesIds.Count != 0)
+            {
+                categoriesExisting = await repositoryCategories.IfTheyExist(categoriesIds);
+            }
+
+            if (categoriesExisting.Count != categoriesIds.Count)
+            {
+                var categoriesNonExisting = categoriesIds.Except(categoriesExisting);
+
+                return TypedResults.BadRequest($"Categories id {string.Join(",", categoriesNonExisting)} do not exist.");
+            }
+
+            await repositoryProducts.AssignCategories(id, categoriesIds);
             return TypedResults.NoContent();
         }
 

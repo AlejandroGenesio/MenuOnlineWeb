@@ -11,5 +11,6 @@ namespace MenuOnlineUdemy.Entities
         public string? Description { get; set; }
         public int? ParentId { get; set; }
         public bool? Enabled { get; set; } = true;
+        public List<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
     }
 } 

@@ -1,6 +1,5 @@
 ﻿using MenuOnlineUdemy.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace MenuOnlineUdemy
 {
@@ -17,8 +16,9 @@ namespace MenuOnlineUdemy
 
             modelBuilder.Entity<Image>().Property(p => p.File).IsUnicode();
 
-            modelBuilder.Entity<ProductImage>().HasKey(g => new {g.ProductId, g.ImageId});
+            modelBuilder.Entity<ProductImage>().HasKey(g => new { g.ProductId, g.ImageId });
             modelBuilder.Entity<ProductModifierGroup>().HasKey(a => new { a.ProductId, a.ModifierGroupId });
+            modelBuilder.Entity<ProductCategory>().HasKey(a => new { a.ProductId, a.CategoryId });
         }
 
         public DbSet<Product> Products { get; set; }
@@ -30,6 +30,7 @@ namespace MenuOnlineUdemy
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<ProductImage> ProductImages { get; set; }
-        public DbSet<ProductModifierGroup> ProductModifierGroups { get; set;}
+        public DbSet<ProductModifierGroup> ProductModifierGroups { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
     }
 }

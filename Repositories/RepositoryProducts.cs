@@ -80,6 +80,22 @@ namespace MenuOnlineUdemy.Repositories
             await context.SaveChangesAsync();
         }
 
+        public async Task AssignCategories(int id, List<int> categoriesIds)
+        {
+            var product = await context.Products.Include(p => p.ProductCategories).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product is null)
+            {
+                throw new ArgumentException($"The id {id} does not exist for this context");
+            }
+
+            var productCategories = categoriesIds.Select(categoryId => new ProductCategory() { CategoryId = categoryId });
+
+            product.ProductCategories = mapper.Map(productCategories, product.ProductCategories);
+
+            await context.SaveChangesAsync();
+        }
+
         public async Task AssignModifierGroup(int id, List<ProductModifierGroup> modifierGroups)
         {
             var product = await context.Products.Include(x => x.ProductModifierGroups).FirstOrDefaultAsync(p => p.Id == id);
