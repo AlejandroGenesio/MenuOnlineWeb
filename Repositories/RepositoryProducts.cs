@@ -40,6 +40,8 @@ namespace MenuOnlineUdemy.Repositories
                     .ThenInclude(ap => ap.Image)
                 .Include(p => p.ProductCategories)
                     .ThenInclude(pc => pc.Category)
+                .Include(p => p.ProductModifierGroups)
+                    .ThenInclude(pc => pc.ModifierGroup)
                 .OrderBy(x => x.Name)
                 .Pagination(paginationDTO).ToListAsync();
             //return await context.Products.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
@@ -51,6 +53,11 @@ namespace MenuOnlineUdemy.Repositories
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductImages.OrderBy(a => a.Order))
                     .ThenInclude(ap => ap.Image)
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
+                .Include(p => p.ProductModifierGroups)
+                    .ThenInclude(pc => pc.ModifierGroup)
+                .OrderBy(x => x.Name)
                 .AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 

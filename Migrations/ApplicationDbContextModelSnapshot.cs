@@ -120,6 +120,9 @@ namespace MenuOnlineUdemy.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("enabled")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("ModifierOptions");

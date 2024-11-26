@@ -10,6 +10,7 @@ namespace MenuOnlineUdemy.Entities
         [StringLength(1000)]
         public string? Description { get; set; }
         public decimal Price { get; set; } = 0;
+        public int enabled {  get; set; } = 1;
         
     }
 }
