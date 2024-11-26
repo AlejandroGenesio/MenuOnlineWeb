@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MenuOnlineUdemy.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace MenuOnlineUdemy.DTOs
 {
@@ -11,5 +12,6 @@ namespace MenuOnlineUdemy.DTOs
         public int? SellMinOptions { get; set; }
         public decimal? SellMinPrice { get; set; }
         public List<ProductImageDTO> Images { get; set; } = new List<ProductImageDTO>();
+        public List<ProductCategoryDTO> Categories { get; set; } = new List<ProductCategoryDTO>();
     }
 }

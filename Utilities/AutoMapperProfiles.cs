@@ -13,7 +13,13 @@ namespace MenuOnlineUdemy.Utilities
                 .ForMember(p => p.Images, entity => entity.MapFrom(p => 
                 p.ProductImages.Select(ap => 
                     new ProductImageDTO { Id = ap.ImageId, 
-                                          File = ap.Image.File})));
+                                          File = ap.Image.File})))
+                .ForMember(p => p.Categories, entity => entity.MapFrom(p =>
+                p.ProductCategories.Select(ap =>
+                    new ProductCategoryDTO
+                    {
+                        Id = ap.CategoryId,
+                        Name = ap.Category.Name})));
 
 
             CreateMap<CreateVariantDTO, Variant>();

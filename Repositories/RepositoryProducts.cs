@@ -38,6 +38,8 @@ namespace MenuOnlineUdemy.Repositories
             return await queryable.AsNoTracking()
                 .Include(p => p.ProductImages)
                     .ThenInclude(ap => ap.Image)
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
                 .OrderBy(x => x.Name)
                 .Pagination(paginationDTO).ToListAsync();
             //return await context.Products.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
