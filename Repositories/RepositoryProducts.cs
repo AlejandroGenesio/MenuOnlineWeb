@@ -35,7 +35,11 @@ namespace MenuOnlineUdemy.Repositories
         {
             var queryable = context.Products.AsQueryable();
             await httpContext.InsertParametersPaginationHeader(queryable);
-            return await queryable.AsNoTracking().OrderBy(x => x.Name).Pagination(paginationDTO).ToListAsync();
+            return await queryable.AsNoTracking()
+                .Include(p => p.ProductImages)
+                    .ThenInclude(ap => ap.Image)
+                .OrderBy(x => x.Name)
+                .Pagination(paginationDTO).ToListAsync();
             //return await context.Products.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
         }
 

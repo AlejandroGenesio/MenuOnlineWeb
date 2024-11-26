@@ -1,1 +1,14 @@
-Notas:
+Notas (repositories):
+
+Aquí están los métodos que permiten traer los datos correctos.
+Es una capa de "Data Access" fuera de la lógica de negocios. Aunque debería estar dentro.
+Son clases aisladas que se llaman cuando son necesarias.
+
+Para acceder a estos métodos, es necesario la línea en Program.cs:
+builder.Services.AddScoped<IRepositoryProducts, RepositoryProducts>();
+
+La interfaz tendrá las referencias.
+
+Estos métodos son utilizados en los "Endpoints".
+
+Los repositorios generalmente van dedicados a una entidad específica.

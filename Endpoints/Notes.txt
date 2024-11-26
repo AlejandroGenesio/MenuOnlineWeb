@@ -1,0 +1,23 @@
+Notes (Endpoints):
+1. Aquí encontramos mezclado la "Business Logic" y la "Application".
+
+Ejemplos:
+Application:
+            group.MapGet("/getbyname/{name}", GetProductsByName);
+
+            group.MapPost("/{id:int}/assignimages", AssignImages);
+
+Business Logic:
+            var pagination = new PaginationDTO { Page = page, RecordsByPage = recordsByPage };
+            var products = await repository.GetAll(pagination);
+            var productsDTO = mapper.Map<List<ProductDTO>>(products); //products.Select(x => new  ProductDTO { Id = x.Id, Name = x.Name}).ToList();
+            return TypedResults.Ok(productsDTO);
+
+
+2. Aquí se encuentra la inyección de dependencia (Dependency Injection).
+Ej.:
+GetProducts(IRepositoryProducts repository, IMapper mapper ...
+
+3. En cada método para obtener datos, se ejecuta un método de un repositorio, y luego se copia a un DTO para devolverlo
+4. En cada método para crear o actualizar datos, y luego se toma los datos que vienen del formulario externo como un DTO,
+y luego los copia en la entidad, y luego se ejecuta un método de un repositorio.

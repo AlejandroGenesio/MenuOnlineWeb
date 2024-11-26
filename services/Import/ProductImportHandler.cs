@@ -4,8 +4,16 @@ using System.Xml.Serialization;
 
 namespace MenuOnlineUdemy.services.Import
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IProductBulkImportHandler
     {
+        /// <summary>
+        /// Receives a file and imports several products
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         Task<bool> Import(IFormFile file);
     }
 
