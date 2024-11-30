@@ -10,6 +10,6 @@ namespace MenuOnlineUdemy.Repositories
         Task<bool> IfExists(int id);
         Task<List<Image>> GetAll();
         Task<Image?> GetById(int id);
-        Task<List<int>> IfTHeyExist(List<int> ids);
+        Task<List<int>> IfTheyExist(List<int> ids);
     }
 }

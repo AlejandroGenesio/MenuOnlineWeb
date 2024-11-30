@@ -15,7 +15,7 @@ namespace MenuOnlineUdemy.Entities
         public List<Variant> Variants { get; set; } = new List<Variant>();
         public List<ProductImage>? ProductImages { get; set; }
 
-        public List<ProductModifierGroup>? ProductModifierGroups { get; set; }
+        public List<ProductModifierGroup>? ProductModifierGroups { get; set; } = new List<ProductModifierGroup>();
 
         public List<ProductCategory>? ProductCategories { get; set; } = new List<ProductCategory>();
 

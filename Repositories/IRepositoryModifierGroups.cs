@@ -3,7 +3,7 @@ using MenuOnlineUdemy.Entities;
 
 namespace MenuOnlineUdemy.Repositories
 {
-    public interface IRepositoryModifierGroups
+    public interface IRepositoryModifierGroups:IRepositoryBase
     {
         Task<int> Create(ModifierGroup modifierGroup);
 

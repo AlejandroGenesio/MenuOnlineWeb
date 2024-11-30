@@ -4,6 +4,7 @@ using MenuOnlineUdemy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MenuOnlineUdemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241126171908_Update02")]
+    partial class Update02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,8 +88,8 @@ namespace MenuOnlineUdemy.Migrations
                     b.Property<int>("GroupStyle")
                         .HasColumnType("int");
 
-                    b.Property<bool>("GroupStyleClosed")
-                        .HasColumnType("bit");
+                    b.Property<int>("GroupStyleClosed")
+                        .HasColumnType("int");
 
                     b.Property<string>("Label")
                         .HasMaxLength(500)
@@ -225,10 +228,22 @@ namespace MenuOnlineUdemy.Migrations
                     b.Property<int>("ModifierGroupId")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("ExtraPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("GroupStyle")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupStyleClosed")
+                        .HasColumnType("int");
+
                     b.Property<string>("Label")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OptionsGroup")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductId", "ModifierGroupId");

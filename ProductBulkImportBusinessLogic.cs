@@ -2,6 +2,7 @@
 using MenuOnlineUdemy.DTOs;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
+using System.Linq;
 using System.Transactions;
 
 namespace MenuOnlineUdemy
@@ -11,11 +12,17 @@ namespace MenuOnlineUdemy
         private readonly IMapper mapper;
         private readonly IRepositoryProducts productRepository;
         private readonly IRepositoryVariants repositoryVariants;
-        public ProductBulkImportBusinessLogic(IMapper mapper, IRepositoryProducts productRepository, IRepositoryVariants repositoryVariants)
+        private readonly IRepositoryModifierGroups modifierGroupsRepository;
+
+        public ProductBulkImportBusinessLogic(IMapper mapper,
+            IRepositoryProducts productRepository,
+            IRepositoryVariants repositoryVariants,
+            IRepositoryModifierGroups modifierGroupsRepository)
         {
             this.mapper = mapper;
             this.productRepository = productRepository;
             this.repositoryVariants = repositoryVariants;
+            this.modifierGroupsRepository = modifierGroupsRepository;
         }
 
         public async Task Import(ProductBulkImportDTO importContainer)
@@ -23,10 +30,18 @@ namespace MenuOnlineUdemy
             // Loop over each product
             try
             {
+
                 var productNameLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-                
+
                 var productVariantsGrouped = importContainer.Variants.GroupBy(v => v.ProductName, StringComparer.OrdinalIgnoreCase);
-                var productVariants = productVariantsGrouped.ToDictionary(k=>k.Key, StringComparer.OrdinalIgnoreCase);
+
+                if (productVariantsGrouped.Any(k => string.IsNullOrWhiteSpace(k.Key)))
+                {
+                    //TODO: Add error. Product name can't be null in Variants
+                    return;
+                }
+                var productVariants = productVariantsGrouped.ToDictionary(k => k.Key, StringComparer.OrdinalIgnoreCase);
+
 
                 // Save products
                 foreach (ProductDTO product in importContainer.Products)
@@ -56,57 +71,36 @@ namespace MenuOnlineUdemy
                     }
 
                     // Handle variants
-                    var currentProductVariants = productVariants.GetValueOrDefault(productToSaveOrCreate.Name);
-                    await HandleVariants(productToSaveOrCreate.Id, currentProductVariants);
+                    var currentProductVariants = productVariants.GetValueOrDefault(productToSaveOrCreate.Name) ?? Enumerable.Empty<ImportProductVariantDTO>();
+                    await HandleVariants(productToSaveOrCreate, currentProductVariants);
+
                 }
 
+                await ImportModifierGroups(importContainer.ModifierGroups);
 
-                async Task HandleVariants(int productId, IEnumerable<ImportProductVariantDTO> variantsToCreate)
+                await AssignProductModifierGroups(importContainer);
+
+
+
+                async Task HandleVariants(Product product, IEnumerable<ImportProductVariantDTO> variantsToCreate)
                 {
-                    foreach(var productVariant in variantsToCreate)
+                    foreach (var productVariant in variantsToCreate)
                     {
-                        if (!productVariant.Id.HasValue)
+                        if (repositoryVariants.IsEmptyId(productVariant.Id))
                         {
 
                             var variantToCreate = new CreateVariantDTO
                             {
                                 Description = productVariant.Description,
                                 Name = productVariant.Name,
-                                price = productVariant.Price,
+                                price = productVariant.Price.GetValueOrDefault(),
                                 stock = productVariant.Stock
                             };
 
-                            await CreateProductVariant(productId,variantToCreate);
+                            await CreateProductVariant(product, variantToCreate);
                         }
                     }
                 }
-
-                // Save Variants
-
-                //foreach (var variant in importContainer.Variants)
-                //{
-                //    if (!productNameLookup.TryGetValue(variant.ProductName??string.Empty, out int productId))
-                //    {
-                //        // TODO: Error, 
-                //        continue;
-
-                //    }
-
-
-                //    var variantToSave = new CreateVariantDTO
-                //    {
-                //        Name = variant.Name,
-                //        Description = variant.Description,
-                //        price = variant.Price,
-                //         stock = variant.Stock                             
-                //    };
-
-
-                //    var variantEntity = mapper.Map<Variant>(variantToSave);
-                //    variantEntity.ProductId = productId;
-
-                //    var id = await repositoryVariants.Create(variantEntity);
-                //}
 
             }
             catch (Exception e)
@@ -125,14 +119,74 @@ namespace MenuOnlineUdemy
             return;
         }
 
-        public async Task CreateProductVariant(int productId, CreateVariantDTO createVariantDTO)
-        {           
+        private async Task AssignProductModifierGroups(ProductBulkImportDTO importDto)
+        {
+            foreach (var productName in importDto.ProductNamesForProductModifierGroupMapping)
+            {
+                // TODO: name is a unique key
+
+
+                //var product = await productRepository.FindByName(productName);
+
+                // TODO: clean database. Add unique constraint for Products
+                var product = (await productRepository.GetByName(productName)).FirstOrDefault();
+                if (product == null)
+                {                    
+                    continue;
+                }
+                
+                List<int> modifierGroupsToAssign = importDto.ModifierGroups
+                    .Where(m => m.MappedWithProductNames.Contains(product.Name!))
+                    .Select(
+                    m => m.Id).ToList();
+
+                await productRepository.AssignModifierGroup(product.Id, modifierGroupsToAssign);
+            }
+        }
+
+        private async Task ImportModifierGroups(IReadOnlyCollection<ImportModifierGroupDTO> modifierGroups)
+        {
+            foreach (var modifierGroupDTO in modifierGroups)
+            {
+                var createDto = new CreateModifierGroupDTO
+                {
+                    ExtraPrice = modifierGroupDTO.ExtraPrice,
+                    GroupStyle = modifierGroupDTO.GroupStyle,
+                    GroupStyleClosed = modifierGroupDTO.GroupStyleClosed,
+                    OptionsGroup = modifierGroupDTO.OptionsGroup,
+                    Label = modifierGroupDTO.Label
+                };
+
+                var modifierGroup = mapper.Map<ModifierGroup>(createDto);
+
+                var exists = await modifierGroupsRepository.IfExists(modifierGroupDTO.Id);
+                if (!exists)
+                {
+                    var createdEntityId = await modifierGroupsRepository.Create(modifierGroup);
+                    modifierGroupDTO.Id = createdEntityId;
+                }
+                else
+                {
+                    modifierGroup.Id = modifierGroupDTO.Id;
+                    await modifierGroupsRepository.Update(modifierGroup);
+                }
+            }
+        }
+
+        public async Task CreateProductVariant(Product product, CreateVariantDTO createVariantDTO)
+        {
             var variant = mapper.Map<Variant>(createVariantDTO);
-            variant.ProductId = productId;
+            variant.ProductId = product.Id;
 
             var id = await repositoryVariants.Create(variant);
 
+            //product.Variants.Add(variant);
+
+            // TODO:  create method for this
+            //await productRepository.Update(product);
+
         }
+
 
     }
 }

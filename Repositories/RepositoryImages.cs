@@ -17,7 +17,7 @@ namespace MenuOnlineUdemy.Repositories
             return await context.Images.AsNoTracking().OrderBy(a => a.File).ToListAsync();
         }
 
-        public async Task<List<int>> IfTHeyExist(List<int> ids)
+        public async Task<List<int>> IfTheyExist(List<int> ids)
         {
             return await context.Images.Where(g => ids.Contains(g.Id)).Select(g => g.Id).ToListAsync();
         }

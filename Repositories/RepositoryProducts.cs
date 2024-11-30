@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MenuOnlineUdemy.Repositories
 {
+
     public class RepositoryProducts : IRepositoryProducts
     {
         private readonly ApplicationDbContext context;
@@ -93,6 +94,22 @@ namespace MenuOnlineUdemy.Repositories
             await context.SaveChangesAsync();
         }
 
+        public async Task AssignModifierGroup(int id, List<int> modifierGroups)
+        {
+            var product = await context.Products.Include(x => x.ProductModifierGroups).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product is null)
+            {
+                throw new ArgumentException($"Id: {id} does not exist.");
+            }
+
+            var modifierGroupEntities = modifierGroups.Select(itemId => new ProductModifierGroup() { ModifierGroupId = itemId });
+
+            product.ProductModifierGroups = mapper.Map(modifierGroupEntities, product.ProductModifierGroups);
+
+            await context.SaveChangesAsync();
+        }
+
         public async Task AssignCategories(int id, List<int> categoriesIds)
         {
             var product = await context.Products.Include(p => p.ProductCategories).FirstOrDefaultAsync(p => p.Id == id);
@@ -109,20 +126,6 @@ namespace MenuOnlineUdemy.Repositories
             await context.SaveChangesAsync();
         }
 
-        public async Task AssignModifierGroup(int id, List<ProductModifierGroup> modifierGroups)
-        {
-            var product = await context.Products.Include(x => x.ProductModifierGroups).FirstOrDefaultAsync(p => p.Id == id);
-
-            if (product is null)
-            {
-                throw new ArgumentException($"Id: {id} does not exist.");
-            }
-
-            product.ProductModifierGroups = mapper.Map(modifierGroups, product.ProductModifierGroups);
-
-            await context.SaveChangesAsync();
-        }
-
         public void DiscardChanges()
         {
             throw new NotImplementedException();
@@ -131,6 +134,11 @@ namespace MenuOnlineUdemy.Repositories
         public bool IsEmptyId(int value)
         {
             return value == 0;
+        }
+
+        public Task<Product?> FindByName(string name)
+        {
+            return context.Products.SingleOrDefaultAsync(a => a.Name == name);
         }
     }
 }

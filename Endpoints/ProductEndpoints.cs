@@ -119,7 +119,7 @@ namespace MenuOnlineUdemy.Endpoints
             var imagesExisting = new List<int>();
             if (imagesIds.Count != 0)
             {
-                imagesExisting = await repositoryImages.IfTHeyExist(imagesIds);
+                imagesExisting = await repositoryImages.IfTheyExist(imagesIds);
             }
 
             if (imagesExisting.Count != imagesIds.Count)
@@ -158,31 +158,29 @@ namespace MenuOnlineUdemy.Endpoints
             return TypedResults.NoContent();
         }
 
-        static async Task<Results<NotFound, NoContent, BadRequest<string>>> AssignModifierGroup(int id,
-            List<AssignProductModifierGroup> modifierDTO, IRepositoryProducts repositoryProducts,
-            IRepositoryModifierGroups repositoryModifierGroups, IMapper mapper)
+        static async Task<Results<NotFound, NoContent, BadRequest<string>>> AssignModifierGroup(int id, 
+            List<int> modifierGroupsIds,
+            IRepositoryProducts repositoryProducts, IRepositoryModifierGroups repositoryModifierGroups)
         {
             if (!await repositoryProducts.IfExists(id))
             {
                 return TypedResults.NotFound();
             }
 
-            var existingModifierGroups = new List<int>();
-            var modifierGroupIds = modifierDTO.Select(a => a.ModifierGroupId).ToList();
-
-            if (modifierDTO.Count != 0)
+            var modifierGroupsExisting = new List<int>();
+            if (modifierGroupsIds.Count != 0)
             {
-                existingModifierGroups = await repositoryModifierGroups.IfTheyExist(modifierGroupIds);
+                modifierGroupsExisting = await repositoryModifierGroups.IfTheyExist(modifierGroupsIds);
             }
 
-            if (existingModifierGroups.Count != modifierGroupIds.Count)
+            if (modifierGroupsExisting.Count != modifierGroupsIds.Count)
             {
-                var nonExistingModifiers = modifierGroupIds.Except(existingModifierGroups);
-                return TypedResults.BadRequest($"These modifier groups do not exist: {string.Join(",", nonExistingModifiers)}");
+                var modifierGroupsNonExisting = modifierGroupsIds.Except(modifierGroupsExisting);
+
+                return TypedResults.BadRequest($"Modifier Groups id {string.Join(",", modifierGroupsNonExisting)} do not exist.");
             }
 
-            var modifierGroups = mapper.Map<List<ProductModifierGroup>>(modifierDTO);
-            await repositoryProducts.AssignModifierGroup(id, modifierGroups);
+            await repositoryProducts.AssignModifierGroup(id, modifierGroupsIds);
             return TypedResults.NoContent();
         }
 

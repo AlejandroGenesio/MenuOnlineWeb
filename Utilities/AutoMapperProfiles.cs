@@ -19,7 +19,14 @@ namespace MenuOnlineUdemy.Utilities
                     new ProductCategoryDTO
                     {
                         Id = ap.CategoryId,
-                        Name = ap.Category.Name})));
+                        Name = ap.Category.Name})))
+                .ForMember(p => p.ModifierGroups, entity => entity.MapFrom(p =>
+                p.ProductModifierGroups.Select(ap =>
+                    new ProductModifierGroupDTO
+                    {
+                        Id = ap.ModifierGroupId,
+                        Label = ap.ModifierGroup.Label
+                    })));
 
 
             CreateMap<CreateVariantDTO, Variant>();
@@ -40,8 +47,6 @@ namespace MenuOnlineUdemy.Utilities
 
             CreateMap<CreateCategoryDTO, Category>();
             CreateMap<Category, CategoryDTO>();
-
-            CreateMap<AssignProductModifierGroup, ProductModifierGroup>();
         }
     }
 }

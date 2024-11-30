@@ -3,7 +3,7 @@ using MenuOnlineUdemy.Entities;
 
 namespace MenuOnlineUdemy.Repositories
 {
-    public interface IRepositoryProducts
+    public interface IRepositoryProducts : IRepositoryBase
     {
         Task<int> Create(Product product);
 
@@ -16,8 +16,10 @@ namespace MenuOnlineUdemy.Repositories
 
         Task Delete(int id);
         Task<List<Product>> GetByName(string name);
+
+        Task<Product?> FindByName(string name);
         Task AssignImages(int id, List<int> imagesIds);
-        Task AssignModifierGroup(int id, List<ProductModifierGroup> modifierGroups);
+        Task AssignModifierGroup(int id, List<int> modifierGroups);
 
         void DiscardChanges();        
         bool IsEmptyId(int value);

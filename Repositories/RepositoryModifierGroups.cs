@@ -59,5 +59,10 @@ namespace MenuOnlineUdemy.Repositories
         {
             return await context.Products.Where(a => ids.Contains(a.Id)).Select(a => a.Id).ToListAsync();
         }
+
+        public bool IsEmptyId(int value)
+        {
+            return value == 0;
+        }
     }
 }

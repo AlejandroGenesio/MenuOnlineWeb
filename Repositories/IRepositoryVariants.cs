@@ -3,7 +3,7 @@ using MenuOnlineUdemy.Entities;
 
 namespace MenuOnlineUdemy.Repositories
 {
-    public interface IRepositoryVariants
+    public interface IRepositoryVariants: IRepositoryBase
     {
         Task<int> Create(Variant variant);
 

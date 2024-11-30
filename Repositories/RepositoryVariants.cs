@@ -54,5 +54,10 @@ namespace MenuOnlineUdemy.Repositories
         {
             return await context.Variants.Where(a => a.Name.Contains(name)).OrderBy(a => a.Name).ToListAsync();
         }
+
+        public bool IsEmptyId(int value)
+        {
+            return value == 0;
+        }
     }
 }
