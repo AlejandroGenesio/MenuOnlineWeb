@@ -31,12 +31,19 @@ namespace MenuOnlineUdemy.Repositories
         {
             var queryable = context.Orders.AsQueryable();
             await httpContext.InsertParametersPaginationHeader(queryable);
-            return await queryable.AsNoTracking().OrderByDescending(x => x.timestamp).Pagination(paginationDTO).ToListAsync();
+            return await queryable
+                .Include(p => p.OrderDetails)
+                .AsNoTracking()
+                .OrderByDescending(x => x.timestamp)
+                .Pagination(paginationDTO).ToListAsync();
         }
 
         public async Task<Order?> GetById(int id)
         {
-            return await context.Orders.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            return await context.Orders
+                .Include(p => p.OrderDetails)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<bool> IfExists(int id)

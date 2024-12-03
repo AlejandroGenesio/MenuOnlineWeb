@@ -9,5 +9,6 @@ namespace MenuOnlineUdemy.DTOs
         public decimal? TotalPrice { get; set; }
         public string? OrderStatus { get; set; }
         public string? ClientName { get; set; }
+        public List<OrderDetailDTO> OrderDetails { get; set; } = new List<OrderDetailDTO>();
     }
 }

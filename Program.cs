@@ -24,6 +24,7 @@ builder.Services.AddScoped<IRepositoryModifierGroups, RepositoryModifierGroups>(
 builder.Services.AddScoped<IRepositoryImages, RepositoryImages>();
 builder.Services.AddScoped<IRepositoryOrders, RepositoryOrders>();
 builder.Services.AddScoped<IRepositoryCategories, RepositoryCategories>();
+builder.Services.AddScoped<IRepositoryOrderDetails, RepositoryOrderDetails>();
 
 builder.Services.AddScoped<IFileStorage, LocalStorage>();
 builder.Services.AddScoped<IProductBulkImportHandler, ProductBulkImportHandler>();
@@ -55,6 +56,7 @@ app.MapGroup("/modifierOptions").MapModifierOptions();
 app.MapGroup("/modifiergroups").MapModifierGroups();
 app.MapGroup("/images").MapImages();
 app.MapGroup("/orders").MapOrders();
+app.MapGroup("/order/{orderId:int}/orderdetails").MapOrderDetails();
 app.MapGroup("/categories").MapCategories();
 
 // Middleware END

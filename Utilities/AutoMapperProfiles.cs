@@ -47,6 +47,9 @@ namespace MenuOnlineUdemy.Utilities
 
             CreateMap<CreateCategoryDTO, Category>();
             CreateMap<Category, CategoryDTO>();
+
+            CreateMap<CreateOrderDetailDTO, OrderDetails>();
+            CreateMap<OrderDetails, OrderDetailDTO>();
         }
     }
 }

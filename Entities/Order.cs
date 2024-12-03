@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.ComponentModel.DataAnnotations;
 
 namespace MenuOnlineUdemy.Entities
 {
@@ -10,5 +11,7 @@ namespace MenuOnlineUdemy.Entities
         public string? OrderStatus { get; set; }
         [StringLength(50)]
         public string? ClientName { get; set; }
+        public string? NotesToPrint { get; set; } // Product - Modifiers - Variants - Prices - etc.
+        public List<OrderDetails> OrderDetails { get; set; } = new List<OrderDetails>();
     }
 } 
