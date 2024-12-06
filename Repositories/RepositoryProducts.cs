@@ -140,5 +140,10 @@ namespace MenuOnlineUdemy.Repositories
         {
             return context.Products.SingleOrDefaultAsync(a => a.Name == name);
         }
+
+        public async Task<bool> DuplicationExists(int id, string name)
+        {
+            return await context.Products.AnyAsync(g => g.Id != id && g.Name == name);
+        }
     }
 }

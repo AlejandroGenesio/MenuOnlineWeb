@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using MenuOnlineUdemy.DTOs;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
@@ -68,9 +69,16 @@ namespace MenuOnlineUdemy.Endpoints
             return TypedResults.Ok(productDTO);
         }
 
-        static async Task<Created<ProductDTO>> CreateProduct(CreateProductDTO createProductDTO, IRepositoryProducts repository
-            , IMapper mapper)
+        static async Task<Results<Created<ProductDTO>, ValidationProblem>> 
+            CreateProduct(CreateProductDTO createProductDTO, IRepositoryProducts repository
+            , IMapper mapper, IValidator<CreateProductDTO> validator)
         {
+            var validationResult = await validator.ValidateAsync(createProductDTO);
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }
+
             var product = mapper.Map<Product>(createProductDTO);
 
             var id = await repository.Create(product);

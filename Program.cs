@@ -1,3 +1,4 @@
+using FluentValidation;
 using MenuOnlineUdemy;
 using MenuOnlineUdemy.Endpoints;
 using MenuOnlineUdemy.Entities;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Services START
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=DefaultConnection"));
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -33,6 +35,9 @@ builder.Services.AddScoped<ProductBulkImportBusinessLogic>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(Program));
+
+// Validation rules
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 EnableExcelLicense();
 
