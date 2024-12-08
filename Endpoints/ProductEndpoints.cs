@@ -18,21 +18,21 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapGet("/{id:int}", GetProductsById);
 
-            group.MapPost("/", CreateProduct);
+            group.MapPost("/", CreateProduct).RequireAuthorization();
 
-            group.MapPut("/{id:int}", UpdateProduct);
+            group.MapPut("/{id:int}", UpdateProduct).RequireAuthorization();
 
-            group.MapDelete("/{id:int}", DeleteProduct);
+            group.MapDelete("/{id:int}", DeleteProduct).RequireAuthorization();
 
             group.MapGet("/getbyname/{name}", GetProductsByName);
 
-            group.MapPost("/{id:int}/assignimages", AssignImages);
+            group.MapPost("/{id:int}/assignimages", AssignImages).RequireAuthorization();
 
-            group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup);
+            group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup).RequireAuthorization();
 
-            group.MapPost("/{id:int}/assigncategories", AssignCategories);
+            group.MapPost("/{id:int}/assigncategories", AssignCategories).RequireAuthorization();
 
-            group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery();
+            group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery().RequireAuthorization();
 
             return group;
         }
@@ -69,7 +69,7 @@ namespace MenuOnlineUdemy.Endpoints
             return TypedResults.Ok(productDTO);
         }
 
-        static async Task<Results<Created<ProductDTO>, ValidationProblem>> 
+        static async Task<Results<Created<ProductDTO>, ValidationProblem>>
             CreateProduct(CreateProductDTO createProductDTO, IRepositoryProducts repository
             , IMapper mapper, IValidator<CreateProductDTO> validator)
         {
@@ -166,7 +166,7 @@ namespace MenuOnlineUdemy.Endpoints
             return TypedResults.NoContent();
         }
 
-        static async Task<Results<NotFound, NoContent, BadRequest<string>>> AssignModifierGroup(int id, 
+        static async Task<Results<NotFound, NoContent, BadRequest<string>>> AssignModifierGroup(int id,
             List<int> modifierGroupsIds,
             IRepositoryProducts repositoryProducts, IRepositoryModifierGroups repositoryModifierGroups)
         {

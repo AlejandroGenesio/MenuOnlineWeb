@@ -1,9 +1,10 @@
 ﻿using MenuOnlineUdemy.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MenuOnlineUdemy
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -19,6 +20,16 @@ namespace MenuOnlineUdemy
             modelBuilder.Entity<ProductImage>().HasKey(g => new { g.ProductId, g.ImageId });
             modelBuilder.Entity<ProductModifierGroup>().HasKey(a => new { a.ProductId, a.ModifierGroupId });
             modelBuilder.Entity<ProductCategory>().HasKey(a => new { a.ProductId, a.CategoryId });
+
+            /*
+             IdentityUser = Usuarios
+            IdentityRoles = Roles
+            IdentityRoleClaim = RolesClaim
+            IdentityUserClaim = UsuariosClaim
+            IdentityUserLogin = UsuariosLogin
+            IdentityUserRole = UsuarioRoles
+            IdentityUserToken = UsuariosTokens
+             */
         }
 
         public DbSet<Product> Products { get; set; }

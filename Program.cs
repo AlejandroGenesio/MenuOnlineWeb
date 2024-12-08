@@ -5,7 +5,9 @@ using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Repositories;
 using MenuOnlineUdemy.services;
 using MenuOnlineUdemy.services.Import;
+using MenuOnlineUdemy.Utilities;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 
@@ -13,12 +15,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Services START
 
+// Authentication
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<UserManager<IdentityUser>>();
+builder.Services.AddScoped<SignInManager<IdentityUser>>();
+
+// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("name=DefaultConnection"));
 builder.Services.AddHttpContextAccessor();
 
+// Frontend
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Backend
 builder.Services.AddScoped<IRepositoryProducts, RepositoryProducts>();
 builder.Services.AddScoped<IRepositoryVariants, RepositoryVariants>();
 builder.Services.AddScoped<IRepositoryModifierOptions, RepositoryModifierOptions>();
@@ -41,6 +54,20 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 EnableExcelLicense();
 
+// Authentication
+builder.Services.AddAuthentication().AddJwtBearer(options =>
+options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+{
+    ValidateIssuer = false,
+    ValidateAudience = false,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    //IssuerSigningKey = AuthKeys.GetKey(builder.Configuration).First(),
+    IssuerSigningKeys = AuthKeys.GetAllKey(builder.Configuration),
+    ClockSkew = TimeSpan.Zero
+});
+builder.Services.AddAuthorization();
+
 
 // Services END
 
@@ -53,6 +80,9 @@ app.UseSwaggerUI();
 
 app.UseStaticFiles();
 
+// Authentication
+app.UseAuthorization();
+
 app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
 
 app.MapGroup("/products").MapProducts();
@@ -63,6 +93,7 @@ app.MapGroup("/images").MapImages();
 app.MapGroup("/orders").MapOrders();
 app.MapGroup("/order/{orderId:int}/orderdetails").MapOrderDetails();
 app.MapGroup("/categories").MapCategories();
+app.MapGroup("/users").MapUsers();
 
 // Middleware END
 
