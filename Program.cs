@@ -9,6 +9,7 @@ using MenuOnlineUdemy.Utilities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +30,25 @@ builder.Services.AddHttpContextAccessor();
 
 // Frontend
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Menu Online",
+        Description = "Menu Online API",
+        Contact = new OpenApiContact
+        {
+            Email = "contact@manuonline.it",
+            Name = "MenuOnline",
+            Url = new Uri("https://menuonline.it")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Menu Online",
+            Url = new Uri("https://menuonline.it")
+        }
+    });
+});
 
 // Backend
 builder.Services.AddScoped<IRepositoryProducts, RepositoryProducts>();
