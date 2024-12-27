@@ -12,6 +12,6 @@ namespace MenuOnlineUdemy.Entities
         public string? OptionsGroup { get; set; }
         public int GroupStyle { get; set; } = 0;
         public bool GroupStyleClosed { get; set; }
-        public List<ProductModifierGroup> ProductModifierGroups { get; set; } = new List<ProductModifierGroup>();
+        public List<ModifierGroupModifierOption>? ModifierGroupModifierOptions { get; set; } = new List<ModifierGroupModifierOption>();
     }
 }

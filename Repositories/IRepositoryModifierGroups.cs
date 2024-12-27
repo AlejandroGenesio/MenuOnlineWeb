@@ -17,5 +17,6 @@ namespace MenuOnlineUdemy.Repositories
         Task Delete(int id);
         Task<List<ModifierGroup>> GetByName(string name);
         Task<List<int>> IfTheyExist(List<int> ids);
+        Task AssignModifierOption(int id, List<int> modifierOptions);
     }
 }

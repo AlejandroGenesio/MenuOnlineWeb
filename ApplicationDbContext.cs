@@ -19,17 +19,9 @@ namespace MenuOnlineUdemy
 
             modelBuilder.Entity<ProductImage>().HasKey(g => new { g.ProductId, g.ImageId });
             modelBuilder.Entity<ProductModifierGroup>().HasKey(a => new { a.ProductId, a.ModifierGroupId });
+            modelBuilder.Entity<ModifierGroupModifierOption>().HasKey(a => new { a.ModifierGroupId, a.ModifierOptionId});
             modelBuilder.Entity<ProductCategory>().HasKey(a => new { a.ProductId, a.CategoryId });
 
-            /*
-             IdentityUser = Usuarios
-            IdentityRoles = Roles
-            IdentityRoleClaim = RolesClaim
-            IdentityUserClaim = UsuariosClaim
-            IdentityUserLogin = UsuariosLogin
-            IdentityUserRole = UsuarioRoles
-            IdentityUserToken = UsuariosTokens
-             */
         }
 
         public DbSet<Product> Products { get; set; }
@@ -42,6 +34,7 @@ namespace MenuOnlineUdemy
 
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductModifierGroup> ProductModifierGroups { get; set; }
+        public DbSet<ModifierGroupModifierOption> ModifierGroupModifierOptions { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
     }
 }

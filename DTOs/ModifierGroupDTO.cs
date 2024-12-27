@@ -10,5 +10,6 @@ namespace MenuOnlineUdemy.DTOs
         public string? OptionsGroup { get; set; }
         public int GroupStyle { get; set; } = 0;
         public int GroupStyleClosed { get; set; } = 0;
+        public List<ModifierGroupModifierOptionDTO> ModifierOptions { get; set; } = new List<ModifierGroupModifierOptionDTO>();
     }
 }

@@ -1,4 +1,5 @@
-﻿using MenuOnlineUdemy.DTOs;
+﻿using AutoMapper;
+using MenuOnlineUdemy.DTOs;
 using MenuOnlineUdemy.Entities;
 using MenuOnlineUdemy.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,14 @@ namespace MenuOnlineUdemy.Repositories
     public class RepositoryModifierGroups : IRepositoryModifierGroups
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
         private readonly HttpContext httpContext;
 
-        public RepositoryModifierGroups(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public RepositoryModifierGroups(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor
+            , IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
             httpContext = httpContextAccessor.HttpContext;
         }
         public async Task<int> Create(ModifierGroup modifierGroup)
@@ -31,7 +35,12 @@ namespace MenuOnlineUdemy.Repositories
         {
             var queryable = context.ModifierGroups.AsQueryable();
             await httpContext.InsertParametersPaginationHeader(queryable);
-            return await queryable.AsNoTracking().OrderBy(x => x.Label).Pagination(paginationDTO).ToListAsync();
+            return await queryable.AsNoTracking()
+                .Include(p => p.ModifierGroupModifierOptions)
+                    .ThenInclude(pc => pc.ModifierOption)
+                .OrderBy(x => x.Label)
+                .Pagination(paginationDTO)
+                .ToListAsync();
         }
 
         public async Task<ModifierGroup?> GetById(int id)
@@ -63,6 +72,22 @@ namespace MenuOnlineUdemy.Repositories
         public bool IsEmptyId(int value)
         {
             return value == 0;
+        }
+
+        public async Task AssignModifierOption(int id, List<int> modifierOptions)
+        {
+            var modifierGroup = await context.ModifierGroups.Include(x => x.ModifierGroupModifierOptions).FirstOrDefaultAsync(p => p.Id == id);
+
+            if (modifierGroup is null)
+            {
+                throw new ArgumentException($"Id: {id} does not exist.");
+            }
+
+            var modifierOptionEntities = modifierOptions.Select(itemId => new ModifierGroupModifierOption() { ModifierOptionId = itemId });
+
+            modifierGroup.ModifierGroupModifierOptions = mapper.Map(modifierOptionEntities, modifierGroup.ModifierGroupModifierOptions);
+
+            await context.SaveChangesAsync();
         }
     }
 }

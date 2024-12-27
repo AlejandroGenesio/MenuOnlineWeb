@@ -23,6 +23,8 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapGet("/getbyname/{name}", GetModifierGroupsByName);
 
+            group.MapPost("/{id:int}/assignmodifieroptions", AssignModifierOption);
+
             return group;
         }
 
@@ -98,5 +100,30 @@ namespace MenuOnlineUdemy.Endpoints
             return TypedResults.NoContent();
         }
 
+        static async Task<Results<NotFound, NoContent, BadRequest<string>>> AssignModifierOption(int id,
+            List<int> modifierOptionsIds,
+            IRepositoryModifierGroups repositoryModifierGroups, IRepositoryModifierOptions repositoryModifierOptions)
+        {
+            if (!await repositoryModifierGroups.IfExists(id))
+            {
+                return TypedResults.NotFound();
+            }
+
+            var modifierOptionsExisting = new List<int>();
+            if (modifierOptionsIds.Count != 0)
+            {
+                modifierOptionsExisting = await repositoryModifierOptions.IfTheyExists(modifierOptionsIds);
+            }
+
+            if (modifierOptionsExisting.Count != modifierOptionsIds.Count)
+            {
+                var modifierOptionsNonExisting = modifierOptionsIds.Except(modifierOptionsExisting);
+
+                return TypedResults.BadRequest($"Modifier Options id {string.Join(",", modifierOptionsNonExisting)} do not exist.");
+            }
+
+            await repositoryModifierGroups.AssignModifierOption(id, modifierOptionsIds);
+            return TypedResults.NoContent();
+        }
     }
 }

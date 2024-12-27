@@ -11,6 +11,7 @@ namespace MenuOnlineUdemy.Entities
         public string? Description { get; set; }
         public decimal Price { get; set; } = 0;
         public int enabled {  get; set; } = 1;
-        
+        public List<ModifierGroupModifierOption>? ModifierGroupModifierOptions { get; set; } = new List<ModifierGroupModifierOption>();
+
     }
 }
