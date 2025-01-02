@@ -18,21 +18,21 @@ namespace MenuOnlineUdemy.Endpoints
 
             group.MapGet("/{id:int}", GetProductsById);
 
-            group.MapPost("/", CreateProduct).RequireAuthorization();
+            group.MapPost("/", CreateProduct); //.RequireAuthorization();
 
-            group.MapPut("/{id:int}", UpdateProduct).RequireAuthorization();
+            group.MapPut("/{id:int}", UpdateProduct); //.RequireAuthorization();
 
-            group.MapDelete("/{id:int}", DeleteProduct).RequireAuthorization();
+            group.MapDelete("/{id:int}", DeleteProduct); //.RequireAuthorization();
 
             group.MapGet("/getbyname/{name}", GetProductsByName);
 
-            group.MapPost("/{id:int}/assignimages", AssignImages).RequireAuthorization();
+            group.MapPost("/{id:int}/assignimages", AssignImages); //.RequireAuthorization();
 
-            group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup).RequireAuthorization();
+            group.MapPost("/{id:int}/assignmodifiergroups", AssignModifierGroup); //.RequireAuthorization();
 
-            group.MapPost("/{id:int}/assigncategories", AssignCategories).RequireAuthorization();
+            group.MapPost("/{id:int}/assigncategories", AssignCategories); //.RequireAuthorization();
 
-            group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery().RequireAuthorization();
+            group.MapPost("/bulkProductImport", ImportProductFile).DisableAntiforgery(); //.RequireAuthorization();
 
             return group;
         }
