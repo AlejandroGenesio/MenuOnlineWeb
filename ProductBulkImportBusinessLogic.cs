@@ -11,18 +11,21 @@ namespace MenuOnlineUdemy
     {
         private readonly IMapper mapper;
         private readonly IRepositoryProducts productRepository;
-        private readonly IRepositoryVariants repositoryVariants;
+        private readonly IRepositoryVariants variantsRepository;
         private readonly IRepositoryModifierGroups modifierGroupsRepository;
+        private readonly IRepositoryModifierOptions modifierOptionsRepository;
 
         public ProductBulkImportBusinessLogic(IMapper mapper,
             IRepositoryProducts productRepository,
             IRepositoryVariants repositoryVariants,
-            IRepositoryModifierGroups modifierGroupsRepository)
+            IRepositoryModifierGroups modifierGroupsRepository,
+            IRepositoryModifierOptions modifierOptionsRepository)
         {
             this.mapper = mapper;
             this.productRepository = productRepository;
-            this.repositoryVariants = repositoryVariants;
+            this.variantsRepository = repositoryVariants;
             this.modifierGroupsRepository = modifierGroupsRepository;
+            this.modifierOptionsRepository = modifierOptionsRepository;
         }
 
         public async Task Import(ProductBulkImportDTO importContainer)
@@ -80,13 +83,15 @@ namespace MenuOnlineUdemy
 
                 await AssignProductModifierGroups(importContainer);
 
+                await AssignModifierGroupOptions(importContainer);
+
 
 
                 async Task HandleVariants(Product product, IEnumerable<ImportProductVariantDTO> variantsToCreate)
                 {
                     foreach (var productVariant in variantsToCreate)
                     {
-                        if (repositoryVariants.IsEmptyId(productVariant.Id))
+                        if (variantsRepository.IsEmptyId(productVariant.Id))
                         {
 
                             var variantToCreate = new CreateVariantDTO
@@ -119,6 +124,58 @@ namespace MenuOnlineUdemy
             return;
         }
 
+        private async Task AssignModifierGroupOptions(ProductBulkImportDTO importContainer)
+        {
+            var optionsByGroup = importContainer.ModifierGroupOptions.GroupBy(option => option.GroupOptionName);
+            foreach (var modifierOptionsByGroup in optionsByGroup)
+            {
+                List<ModifierGroup> groupOptions = await modifierGroupsRepository.GetByGroupOptionsName(modifierOptionsByGroup.Key);
+                // Assign Options to each group
+
+                foreach (ModifierGroup group in groupOptions)
+                {
+                    // Clear all options, to assign them later
+                    group.ModifierGroupOptions.Clear();
+                    await modifierGroupsRepository.Update(group);
+
+                    foreach (var modifierOption in modifierOptionsByGroup)
+                    {
+                        ModifierOption optionToMap;
+
+                        if (await modifierOptionsRepository.IfExists(modifierOption.Id))
+                        {
+                            // Exists, update
+                            optionToMap = await modifierOptionsRepository.GetById(modifierOption.Id);
+
+                            if (optionToMap == null)
+                                continue;
+
+                            optionToMap.Description = modifierOption.Description;
+                            optionToMap.Name = modifierOption.Name;
+                            optionToMap.Price = optionToMap.Price;
+
+                            await modifierOptionsRepository.Update(optionToMap);
+                        }
+                        else
+                        {
+                            // Create new
+                            optionToMap = new()
+                            {
+                                Id = modifierOption.Id,
+                                Description = modifierOption.Description,
+                                Name = modifierOption.Name,
+                                Price = modifierOption.Price.GetValueOrDefault(),
+                                ModifierGroup = group
+                            };
+
+                            await modifierOptionsRepository.Create(optionToMap);
+                        }
+                    }
+
+                }
+            }
+        }
+
         private async Task AssignProductModifierGroups(ProductBulkImportDTO importDto)
         {
             foreach (var productName in importDto.ProductNamesForProductModifierGroupMapping)
@@ -131,10 +188,10 @@ namespace MenuOnlineUdemy
                 // TODO: clean database. Add unique constraint for Products
                 var product = (await productRepository.GetByName(productName)).FirstOrDefault();
                 if (product == null)
-                {                    
+                {
                     continue;
                 }
-                
+
                 List<int> modifierGroupsToAssign = importDto.ModifierGroups
                     .Where(m => m.MappedWithProductNames.Contains(product.Name!))
                     .Select(
@@ -178,7 +235,7 @@ namespace MenuOnlineUdemy
             var variant = mapper.Map<Variant>(createVariantDTO);
             variant.ProductId = product.Id;
 
-            var id = await repositoryVariants.Create(variant);
+            var id = await variantsRepository.Create(variant);
 
             //product.Variants.Add(variant);
 

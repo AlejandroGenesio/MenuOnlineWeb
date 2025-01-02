@@ -12,6 +12,7 @@ namespace MenuOnlineUdemy.Entities
         public string? OptionsGroup { get; set; }
         public int GroupStyle { get; set; } = 0;
         public bool GroupStyleClosed { get; set; }
-        public List<ModifierGroupModifierOption>? ModifierGroupModifierOptions { get; set; } = new List<ModifierGroupModifierOption>();
+        //public List<ModifierGroupModifierOption>? ModifierGroupModifierOptions { get; set; } = new List<ModifierGroupModifierOption>();
+        public virtual List<ModifierOption> ModifierGroupOptions { get; set; } = new List<ModifierOption>();
     }
 }

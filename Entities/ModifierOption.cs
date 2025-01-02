@@ -10,8 +10,10 @@ namespace MenuOnlineUdemy.Entities
         [StringLength(1000)]
         public string? Description { get; set; }
         public decimal Price { get; set; } = 0;
-        public int enabled {  get; set; } = 1;
-        public List<ModifierGroupModifierOption>? ModifierGroupModifierOptions { get; set; } = new List<ModifierGroupModifierOption>();
+        public bool enabled {  get; set; } = true;
+        //public List<ModifierGroupModifierOption>? ModifierGroupModifierOptions { get; set; } = new List<ModifierGroupModifierOption>();
+
+        public ModifierGroup ModifierGroup { get; set; }
 
     }
 }

@@ -8,6 +8,8 @@
 
         public List<ImportModifierGroupDTO> ModifierGroups { get; set; } = new();
 
+        public List<ImportModifierGroupOptionDTO> ModifierGroupOptions { get; set; } = new();
+
         public List<string> ProductNamesForProductModifierGroupMapping { get; set; }
     }
 
@@ -22,6 +24,15 @@
 
         public HashSet<string> MappedWithProductNames { get; set; } = new ();
 
+    }
+
+    public class ImportModifierGroupOptionDTO
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal? Price { get; set; }
+        public string? GroupOptionName { get; set; }
     }
 
 }

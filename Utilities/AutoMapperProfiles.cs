@@ -35,10 +35,13 @@ namespace MenuOnlineUdemy.Utilities
             CreateMap<CreateModifierGroupDTO, ModifierGroup>();
             CreateMap<ModifierGroup, ModifierGroupDTO>()
                 .ForMember(p => p.ModifierOptions, entity => entity.MapFrom(p =>
-                p.ModifierGroupModifierOptions.Select(ap =>
-                    new ModifierGroupModifierOptionDTO
+                p.ModifierGroupOptions.Select(ap =>
+                    new ModifierOptionDTO
                     {
-                        Id = ap.ModifierOptionId
+                        Id = ap.Id,
+                        Description = ap.Description,   
+                        Name = ap.Name,
+                        Price = ap.Price
                     })));
 
             CreateMap<CreateModifierOptionDTO, ModifierOption>();

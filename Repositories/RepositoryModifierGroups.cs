@@ -36,8 +36,7 @@ namespace MenuOnlineUdemy.Repositories
             var queryable = context.ModifierGroups.AsQueryable();
             await httpContext.InsertParametersPaginationHeader(queryable);
             return await queryable.AsNoTracking()
-                .Include(p => p.ModifierGroupModifierOptions)
-                    .ThenInclude(pc => pc.ModifierOption)
+                .Include(p => p.ModifierGroupOptions)
                 .OrderBy(x => x.Label)
                 .Pagination(paginationDTO)
                 .ToListAsync();
@@ -74,20 +73,23 @@ namespace MenuOnlineUdemy.Repositories
             return value == 0;
         }
 
-        public async Task AssignModifierOption(int id, List<int> modifierOptions)
+        public async Task AssignModifierOption(int id, List<ModifierOption> modifierOptions)
         {
-            var modifierGroup = await context.ModifierGroups.Include(x => x.ModifierGroupModifierOptions).FirstOrDefaultAsync(p => p.Id == id);
+            var modifierGroup = await context.ModifierGroups.Include(x => x.ModifierGroupOptions).FirstOrDefaultAsync(p => p.Id == id);
 
             if (modifierGroup is null)
             {
                 throw new ArgumentException($"Id: {id} does not exist.");
             }
 
-            var modifierOptionEntities = modifierOptions.Select(itemId => new ModifierGroupModifierOption() { ModifierOptionId = itemId });
-
-            modifierGroup.ModifierGroupModifierOptions = mapper.Map(modifierOptionEntities, modifierGroup.ModifierGroupModifierOptions);
+            modifierGroup.ModifierGroupOptions = modifierOptions;
 
             await context.SaveChangesAsync();
+        }
+
+        public  Task<List<ModifierGroup>> GetByGroupOptionsName(string optionsGroupName)
+        {
+            return  context.ModifierGroups.Where(p => p.OptionsGroup == optionsGroupName).ToListAsync();
         }
     }
 }

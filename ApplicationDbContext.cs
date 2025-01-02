@@ -19,8 +19,14 @@ namespace MenuOnlineUdemy
 
             modelBuilder.Entity<ProductImage>().HasKey(g => new { g.ProductId, g.ImageId });
             modelBuilder.Entity<ProductModifierGroup>().HasKey(a => new { a.ProductId, a.ModifierGroupId });
-            modelBuilder.Entity<ModifierGroupModifierOption>().HasKey(a => new { a.ModifierGroupId, a.ModifierOptionId});
             modelBuilder.Entity<ProductCategory>().HasKey(a => new { a.ProductId, a.CategoryId });
+
+            modelBuilder.Entity<ModifierOption>()
+        .HasOne(o => o.ModifierGroup)
+        .WithMany(od => od.ModifierGroupOptions)
+        
+        .OnDelete(DeleteBehavior.NoAction);
+
 
         }
 
@@ -34,7 +40,6 @@ namespace MenuOnlineUdemy
 
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductModifierGroup> ProductModifierGroups { get; set; }
-        public DbSet<ModifierGroupModifierOption> ModifierGroupModifierOptions { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
     }
 }

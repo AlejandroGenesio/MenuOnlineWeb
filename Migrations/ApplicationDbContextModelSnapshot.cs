@@ -101,21 +101,6 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("ModifierGroups");
                 });
 
-            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierGroupModifierOption", b =>
-                {
-                    b.Property<int>("ModifierGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ModifierOptionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ModifierGroupId", "ModifierOptionId");
-
-                    b.HasIndex("ModifierOptionId");
-
-                    b.ToTable("ModifierGroupModifierOptions");
-                });
-
             modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierOption", b =>
                 {
                     b.Property<int>("Id")
@@ -128,6 +113,9 @@ namespace MenuOnlineUdemy.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<int>("ModifierGroupId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -135,10 +123,12 @@ namespace MenuOnlineUdemy.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("enabled")
-                        .HasColumnType("int");
+                    b.Property<bool>("enabled")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ModifierGroupId");
 
                     b.ToTable("ModifierOptions");
                 });
@@ -516,23 +506,15 @@ namespace MenuOnlineUdemy.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierGroupModifierOption", b =>
+            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierOption", b =>
                 {
                     b.HasOne("MenuOnlineUdemy.Entities.ModifierGroup", "ModifierGroup")
-                        .WithMany("ModifierGroupModifierOptions")
+                        .WithMany("ModifierGroupOptions")
                         .HasForeignKey("ModifierGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MenuOnlineUdemy.Entities.ModifierOption", "ModifierOption")
-                        .WithMany("ModifierGroupModifierOptions")
-                        .HasForeignKey("ModifierOptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ModifierGroup");
-
-                    b.Navigation("ModifierOption");
                 });
 
             modelBuilder.Entity("MenuOnlineUdemy.Entities.OrderDetails", b =>
@@ -673,12 +655,7 @@ namespace MenuOnlineUdemy.Migrations
 
             modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierGroup", b =>
                 {
-                    b.Navigation("ModifierGroupModifierOptions");
-                });
-
-            modelBuilder.Entity("MenuOnlineUdemy.Entities.ModifierOption", b =>
-                {
-                    b.Navigation("ModifierGroupModifierOptions");
+                    b.Navigation("ModifierGroupOptions");
                 });
 
             modelBuilder.Entity("MenuOnlineUdemy.Entities.Order", b =>

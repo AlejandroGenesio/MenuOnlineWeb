@@ -40,6 +40,11 @@ namespace MenuOnlineUdemy.Repositories
             return await context.ModifierOptions.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        public  Task<List<ModifierOption>> GetByIds(HashSet<int> ids)
+        {
+            return  context.ModifierOptions.Where(p => ids.Contains(p.Id)).ToListAsync();
+        }
+
         public async Task<bool> IfExists(int id)
         {
             return await context.ModifierOptions.AsNoTracking().AnyAsync(x => x.Id == id);

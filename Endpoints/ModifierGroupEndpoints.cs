@@ -122,7 +122,10 @@ namespace MenuOnlineUdemy.Endpoints
                 return TypedResults.BadRequest($"Modifier Options id {string.Join(",", modifierOptionsNonExisting)} do not exist.");
             }
 
-            await repositoryModifierGroups.AssignModifierOption(id, modifierOptionsIds);
+
+            var itemsToAsign = await repositoryModifierOptions.GetByIds(modifierOptionsIds.ToHashSet());
+
+            await repositoryModifierGroups.AssignModifierOption(id, itemsToAsign);
             return TypedResults.NoContent();
         }
     }

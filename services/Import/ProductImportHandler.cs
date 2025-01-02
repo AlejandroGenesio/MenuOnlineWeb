@@ -56,11 +56,13 @@ namespace MenuOnlineUdemy.services.Import
 
                     var productWorkshet = package.Workbook.Worksheets[productsWorksheetIndex]; // Products
                     var modifierGroupsWorksheet = package.Workbook.Worksheets[1];
+                    var modifierGroupsOptionsWorksheet = package.Workbook.Worksheets[2];
                     var variantWorksheet = package.Workbook.Worksheets[3]; // Variants
 
 
                     HandleWorksheet(productWorkshet, importDto, HandleProductRow);
                     HandleWorksheet(modifierGroupsWorksheet, importDto, HandleModifierGroupsWithProductMappingRow, rowOffset: 1);
+                    HandleWorksheet(modifierGroupsOptionsWorksheet, importDto, HandleModifierGroupOptions, rowOffset: 1);
                     HandleWorksheet(variantWorksheet, importDto, HandleVariantRow);
 
                     await importBusinessLogic.Import(importDto);
@@ -87,6 +89,35 @@ namespace MenuOnlineUdemy.services.Import
             {
                 importDto.ModifierGroups.Add(dto);
             }
+        }
+
+        private void HandleModifierGroupOptions(CustomExcelRow row, ProductBulkImportDTO importDto)
+        {
+            List<string> productNamesOrdered = new();
+            ImportModifierGroupOptionDTO dto = TransformModifierGroupOptionRow(row);
+
+            if (dto != null)
+            {
+                importDto.ModifierGroupOptions.Add(dto);
+            }
+        }
+
+
+        private ImportModifierGroupOptionDTO TransformModifierGroupOptionRow(CustomExcelRow value)
+        {
+            ArgumentNullException.ThrowIfNull(nameof(value));
+
+            int currentColumn = 0;
+            var result = new ImportModifierGroupOptionDTO()
+            {
+                Id = value.GetIntValue(currentColumn++, 0).GetValueOrDefault(),
+                Name = value.GetTextValue(currentColumn++),
+                Description = value.GetTextValue(currentColumn++),
+                Price = value.GetDecimalValue(currentColumn++),
+                GroupOptionName = value.GetTextValue(currentColumn++)
+            };
+            
+            return result;
         }
 
         private ImportModifierGroupDTO TransformProductModifierRow(CustomExcelRow value, int firstProductColumnOffset, List<string> orderedAvailableProducts)
